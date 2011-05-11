@@ -1,0 +1,652 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1E02BD6E137B12B7005E1B35 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E02BD6D137B12B7005E1B35 /* Cocoa.framework */; };
+		1E02BD78137B12B7005E1B35 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1E02BD76137B12B7005E1B35 /* InfoPlist.strings */; };
+		1E02BD7B137B12B7005E1B35 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E02BD7A137B12B7005E1B35 /* main.m */; };
+		1E02BD7E137B12B7005E1B35 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 1E02BD7C137B12B7005E1B35 /* Credits.rtf */; };
+		1E02BD81137B12B7005E1B35 /* TagCloudDoc.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E02BD80137B12B7005E1B35 /* TagCloudDoc.m */; };
+		1E02BD84137B12B7005E1B35 /* TagCloudDoc.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1E02BD82137B12B7005E1B35 /* TagCloudDoc.xib */; };
+		1E02BD87137B12B7005E1B35 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1E02BD85137B12B7005E1B35 /* MainMenu.xib */; };
+		1E02BD8A137B12B7005E1B35 /* TagCloudDoc.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 1E02BD88137B12B7005E1B35 /* TagCloudDoc.xcdatamodeld */; };
+		1E02BD91137B12B8005E1B35 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E02BD6D137B12B7005E1B35 /* Cocoa.framework */; };
+		1E02BD99137B12B8005E1B35 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1E02BD97137B12B8005E1B35 /* InfoPlist.strings */; };
+		1E02BD9C137B12B8005E1B35 /* TagCloudCreatorTests.h in Resources */ = {isa = PBXBuildFile; fileRef = 1E02BD9B137B12B8005E1B35 /* TagCloudCreatorTests.h */; };
+		1E02BD9E137B12B8005E1B35 /* TagCloudCreatorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E02BD9D137B12B8005E1B35 /* TagCloudCreatorTests.m */; };
+		1E02BDA6137B12B8005E1B35 /* TagCloudCreatorImporter.mdimporter in Resources */ = {isa = PBXBuildFile; fileRef = 1E02BDA3137B12B8005E1B35 /* TagCloudCreatorImporter.mdimporter */; };
+		1E02BDA8137B12B8005E1B35 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E02BDA7137B12B8005E1B35 /* CoreServices.framework */; };
+		1E02BDAA137B12B8005E1B35 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E02BDA9137B12B8005E1B35 /* CoreFoundation.framework */; };
+		1E02BDAC137B12B8005E1B35 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E02BDAB137B12B8005E1B35 /* CoreData.framework */; };
+		1E02BDAE137B12B8005E1B35 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E02BDAD137B12B8005E1B35 /* Foundation.framework */; };
+		1E02BDB4137B12B8005E1B35 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1E02BDB2137B12B8005E1B35 /* InfoPlist.strings */; };
+		1E02BDB7137B12B8005E1B35 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 1E02BDB6137B12B8005E1B35 /* main.c */; };
+		1E02BDB9137B12B8005E1B35 /* GetMetadataForFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E02BDB8137B12B8005E1B35 /* GetMetadataForFile.m */; };
+		1E02BDBC137B12B8005E1B35 /* MySpotlightImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E02BDBB137B12B8005E1B35 /* MySpotlightImporter.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		1E02BD92137B12B8005E1B35 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1E02BD60137B12B7005E1B35 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1E02BD68137B12B7005E1B35;
+			remoteInfo = TagCloudCreator;
+		};
+		1E02BDA4137B12B8005E1B35 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1E02BD60137B12B7005E1B35 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1E02BDA2137B12B8005E1B35;
+			remoteInfo = TagCloudCreatorImporter;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		1E02BD69137B12B7005E1B35 /* TagCloudCreator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TagCloudCreator.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1E02BD6D137B12B7005E1B35 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		1E02BD70137B12B7005E1B35 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		1E02BD71137B12B7005E1B35 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		1E02BD72137B12B7005E1B35 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		1E02BD75137B12B7005E1B35 /* TagCloudCreator-Info.plist */ = {isa = PBXFileReference; path = "TagCloudCreator-Info.plist"; sourceTree = "<group>"; };
+		1E02BD77137B12B7005E1B35 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		1E02BD79137B12B7005E1B35 /* TagCloudCreator-Prefix.pch */ = {isa = PBXFileReference; path = "TagCloudCreator-Prefix.pch"; sourceTree = "<group>"; };
+		1E02BD7A137B12B7005E1B35 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		1E02BD7D137B12B7005E1B35 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
+		1E02BD7F137B12B7005E1B35 /* TagCloudDoc.h */ = {isa = PBXFileReference; path = TagCloudDoc.h; sourceTree = "<group>"; };
+		1E02BD80137B12B7005E1B35 /* TagCloudDoc.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TagCloudDoc.m; sourceTree = "<group>"; };
+		1E02BD83137B12B7005E1B35 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/TagCloudDoc.xib; sourceTree = "<group>"; };
+		1E02BD86137B12B7005E1B35 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		1E02BD89137B12B7005E1B35 /* TagCloudDoc.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TagCloudDoc.xcdatamodel; sourceTree = "<group>"; };
+		1E02BD90137B12B8005E1B35 /* TagCloudCreatorTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TagCloudCreatorTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
+		1E02BD96137B12B8005E1B35 /* TagCloudCreatorTests-Info.plist */ = {isa = PBXFileReference; path = "TagCloudCreatorTests-Info.plist"; sourceTree = "<group>"; };
+		1E02BD98137B12B8005E1B35 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		1E02BD9A137B12B8005E1B35 /* TagCloudCreatorTests-Prefix.pch */ = {isa = PBXFileReference; path = "TagCloudCreatorTests-Prefix.pch"; sourceTree = "<group>"; };
+		1E02BD9B137B12B8005E1B35 /* TagCloudCreatorTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TagCloudCreatorTests.h; sourceTree = "<group>"; };
+		1E02BD9D137B12B8005E1B35 /* TagCloudCreatorTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TagCloudCreatorTests.m; sourceTree = "<group>"; };
+		1E02BDA3137B12B8005E1B35 /* TagCloudCreatorImporter.mdimporter */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TagCloudCreatorImporter.mdimporter; sourceTree = BUILT_PRODUCTS_DIR; };
+		1E02BDA7137B12B8005E1B35 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
+		1E02BDA9137B12B8005E1B35 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		1E02BDAB137B12B8005E1B35 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		1E02BDAD137B12B8005E1B35 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		1E02BDB1137B12B8005E1B35 /* TagCloudCreatorImporter-Info.plist */ = {isa = PBXFileReference; path = "TagCloudCreatorImporter-Info.plist"; sourceTree = "<group>"; };
+		1E02BDB3137B12B8005E1B35 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		1E02BDB5137B12B8005E1B35 /* TagCloudCreatorImporter-Prefix.pch */ = {isa = PBXFileReference; path = "TagCloudCreatorImporter-Prefix.pch"; sourceTree = "<group>"; };
+		1E02BDB6137B12B8005E1B35 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		1E02BDB8137B12B8005E1B35 /* GetMetadataForFile.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GetMetadataForFile.m; sourceTree = "<group>"; };
+		1E02BDBA137B12B8005E1B35 /* MySpotlightImporter.h */ = {isa = PBXFileReference; path = MySpotlightImporter.h; sourceTree = "<group>"; };
+		1E02BDBB137B12B8005E1B35 /* MySpotlightImporter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MySpotlightImporter.m; sourceTree = "<group>"; };
+		1E02BDBD137B12B8005E1B35 /* Importer Read Me.txt */ = {isa = PBXFileReference; path = "Importer Read Me.txt"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1E02BD66137B12B7005E1B35 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1E02BD6E137B12B7005E1B35 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1E02BD8C137B12B8005E1B35 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1E02BD91137B12B8005E1B35 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1E02BDA0137B12B8005E1B35 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1E02BDA8137B12B8005E1B35 /* CoreServices.framework in Frameworks */,
+				1E02BDAA137B12B8005E1B35 /* CoreFoundation.framework in Frameworks */,
+				1E02BDAC137B12B8005E1B35 /* CoreData.framework in Frameworks */,
+				1E02BDAE137B12B8005E1B35 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1E02BD5E137B12B7005E1B35 = {
+			isa = PBXGroup;
+			children = (
+				1E02BD73137B12B7005E1B35 /* TagCloudCreator */,
+				1E02BD94137B12B8005E1B35 /* TagCloudCreatorTests */,
+				1E02BDAF137B12B8005E1B35 /* TagCloudCreatorImporter */,
+				1E02BD6C137B12B7005E1B35 /* Frameworks */,
+				1E02BD6A137B12B7005E1B35 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		1E02BD6A137B12B7005E1B35 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1E02BD69137B12B7005E1B35 /* TagCloudCreator.app */,
+				1E02BD90137B12B8005E1B35 /* TagCloudCreatorTests.octest */,
+				1E02BDA3137B12B8005E1B35 /* TagCloudCreatorImporter.mdimporter */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1E02BD6C137B12B7005E1B35 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1E02BD6D137B12B7005E1B35 /* Cocoa.framework */,
+				1E02BDA7137B12B8005E1B35 /* CoreServices.framework */,
+				1E02BDA9137B12B8005E1B35 /* CoreFoundation.framework */,
+				1E02BDAB137B12B8005E1B35 /* CoreData.framework */,
+				1E02BDAD137B12B8005E1B35 /* Foundation.framework */,
+				1E02BD6F137B12B7005E1B35 /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		1E02BD6F137B12B7005E1B35 /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1E02BD70137B12B7005E1B35 /* AppKit.framework */,
+				1E02BD71137B12B7005E1B35 /* CoreData.framework */,
+				1E02BD72137B12B7005E1B35 /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		1E02BD73137B12B7005E1B35 /* TagCloudCreator */ = {
+			isa = PBXGroup;
+			children = (
+				1E02BD7F137B12B7005E1B35 /* TagCloudDoc.h */,
+				1E02BD80137B12B7005E1B35 /* TagCloudDoc.m */,
+				1E02BD82137B12B7005E1B35 /* TagCloudDoc.xib */,
+				1E02BD85137B12B7005E1B35 /* MainMenu.xib */,
+				1E02BD88137B12B7005E1B35 /* TagCloudDoc.xcdatamodeld */,
+				1E02BD74137B12B7005E1B35 /* Supporting Files */,
+			);
+			path = TagCloudCreator;
+			sourceTree = "<group>";
+		};
+		1E02BD74137B12B7005E1B35 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				1E02BD75137B12B7005E1B35 /* TagCloudCreator-Info.plist */,
+				1E02BD76137B12B7005E1B35 /* InfoPlist.strings */,
+				1E02BD79137B12B7005E1B35 /* TagCloudCreator-Prefix.pch */,
+				1E02BD7A137B12B7005E1B35 /* main.m */,
+				1E02BD7C137B12B7005E1B35 /* Credits.rtf */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		1E02BD94137B12B8005E1B35 /* TagCloudCreatorTests */ = {
+			isa = PBXGroup;
+			children = (
+				1E02BD9B137B12B8005E1B35 /* TagCloudCreatorTests.h */,
+				1E02BD9D137B12B8005E1B35 /* TagCloudCreatorTests.m */,
+				1E02BD95137B12B8005E1B35 /* Supporting Files */,
+			);
+			path = TagCloudCreatorTests;
+			sourceTree = "<group>";
+		};
+		1E02BD95137B12B8005E1B35 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				1E02BD96137B12B8005E1B35 /* TagCloudCreatorTests-Info.plist */,
+				1E02BD97137B12B8005E1B35 /* InfoPlist.strings */,
+				1E02BD9A137B12B8005E1B35 /* TagCloudCreatorTests-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		1E02BDAF137B12B8005E1B35 /* TagCloudCreatorImporter */ = {
+			isa = PBXGroup;
+			children = (
+				1E02BDB8137B12B8005E1B35 /* GetMetadataForFile.m */,
+				1E02BDBA137B12B8005E1B35 /* MySpotlightImporter.h */,
+				1E02BDBB137B12B8005E1B35 /* MySpotlightImporter.m */,
+				1E02BDBD137B12B8005E1B35 /* Importer Read Me.txt */,
+				1E02BDB0137B12B8005E1B35 /* Supporting Files */,
+			);
+			path = TagCloudCreatorImporter;
+			sourceTree = "<group>";
+		};
+		1E02BDB0137B12B8005E1B35 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				1E02BDB1137B12B8005E1B35 /* TagCloudCreatorImporter-Info.plist */,
+				1E02BDB2137B12B8005E1B35 /* InfoPlist.strings */,
+				1E02BDB5137B12B8005E1B35 /* TagCloudCreatorImporter-Prefix.pch */,
+				1E02BDB6137B12B8005E1B35 /* main.c */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1E02BD68137B12B7005E1B35 /* TagCloudCreator */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1E02BDC3137B12B8005E1B35 /* Build configuration list for PBXNativeTarget "TagCloudCreator" */;
+			buildPhases = (
+				1E02BD65137B12B7005E1B35 /* Sources */,
+				1E02BD66137B12B7005E1B35 /* Frameworks */,
+				1E02BD67137B12B7005E1B35 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1E02BDA5137B12B8005E1B35 /* PBXTargetDependency */,
+			);
+			name = TagCloudCreator;
+			productName = TagCloudCreator;
+			productReference = 1E02BD69137B12B7005E1B35 /* TagCloudCreator.app */;
+			productType = "com.apple.product-type.application";
+		};
+		1E02BD8F137B12B8005E1B35 /* TagCloudCreatorTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1E02BDC6137B12B8005E1B35 /* Build configuration list for PBXNativeTarget "TagCloudCreatorTests" */;
+			buildPhases = (
+				1E02BD8B137B12B8005E1B35 /* Sources */,
+				1E02BD8C137B12B8005E1B35 /* Frameworks */,
+				1E02BD8D137B12B8005E1B35 /* Resources */,
+				1E02BD8E137B12B8005E1B35 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1E02BD93137B12B8005E1B35 /* PBXTargetDependency */,
+			);
+			name = TagCloudCreatorTests;
+			productName = TagCloudCreatorTests;
+			productReference = 1E02BD90137B12B8005E1B35 /* TagCloudCreatorTests.octest */;
+			productType = "com.apple.product-type.bundle";
+		};
+		1E02BDA2137B12B8005E1B35 /* TagCloudCreatorImporter */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1E02BDC0137B12B8005E1B35 /* Build configuration list for PBXNativeTarget "TagCloudCreatorImporter" */;
+			buildPhases = (
+				1E02BD9F137B12B8005E1B35 /* Sources */,
+				1E02BDA0137B12B8005E1B35 /* Frameworks */,
+				1E02BDA1137B12B8005E1B35 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TagCloudCreatorImporter;
+			productName = TagCloudCreatorImporter;
+			productReference = 1E02BDA3137B12B8005E1B35 /* TagCloudCreatorImporter.mdimporter */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		1E02BD60137B12B7005E1B35 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				ORGANIZATIONNAME = Silutions;
+			};
+			buildConfigurationList = 1E02BD63137B12B7005E1B35 /* Build configuration list for PBXProject "TagCloudCreator" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 1E02BD5E137B12B7005E1B35;
+			productRefGroup = 1E02BD6A137B12B7005E1B35 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1E02BD68137B12B7005E1B35 /* TagCloudCreator */,
+				1E02BD8F137B12B8005E1B35 /* TagCloudCreatorTests */,
+				1E02BDA2137B12B8005E1B35 /* TagCloudCreatorImporter */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1E02BD67137B12B7005E1B35 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1E02BD78137B12B7005E1B35 /* InfoPlist.strings in Resources */,
+				1E02BD7E137B12B7005E1B35 /* Credits.rtf in Resources */,
+				1E02BD84137B12B7005E1B35 /* TagCloudDoc.xib in Resources */,
+				1E02BD87137B12B7005E1B35 /* MainMenu.xib in Resources */,
+				1E02BDA6137B12B8005E1B35 /* TagCloudCreatorImporter.mdimporter in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1E02BD8D137B12B8005E1B35 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1E02BD99137B12B8005E1B35 /* InfoPlist.strings in Resources */,
+				1E02BD9C137B12B8005E1B35 /* TagCloudCreatorTests.h in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1E02BDA1137B12B8005E1B35 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1E02BDB4137B12B8005E1B35 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		1E02BD8E137B12B8005E1B35 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1E02BD65137B12B7005E1B35 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1E02BD7B137B12B7005E1B35 /* main.m in Sources */,
+				1E02BD81137B12B7005E1B35 /* TagCloudDoc.m in Sources */,
+				1E02BD8A137B12B7005E1B35 /* TagCloudDoc.xcdatamodeld in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1E02BD8B137B12B8005E1B35 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1E02BD9E137B12B8005E1B35 /* TagCloudCreatorTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1E02BD9F137B12B8005E1B35 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1E02BDB7137B12B8005E1B35 /* main.c in Sources */,
+				1E02BDB9137B12B8005E1B35 /* GetMetadataForFile.m in Sources */,
+				1E02BDBC137B12B8005E1B35 /* MySpotlightImporter.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		1E02BD93137B12B8005E1B35 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1E02BD68137B12B7005E1B35 /* TagCloudCreator */;
+			targetProxy = 1E02BD92137B12B8005E1B35 /* PBXContainerItemProxy */;
+		};
+		1E02BDA5137B12B8005E1B35 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1E02BDA2137B12B8005E1B35 /* TagCloudCreatorImporter */;
+			targetProxy = 1E02BDA4137B12B8005E1B35 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		1E02BD76137B12B7005E1B35 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1E02BD77137B12B7005E1B35 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		1E02BD7C137B12B7005E1B35 /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1E02BD7D137B12B7005E1B35 /* en */,
+			);
+			name = Credits.rtf;
+			sourceTree = "<group>";
+		};
+		1E02BD82137B12B7005E1B35 /* TagCloudDoc.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1E02BD83137B12B7005E1B35 /* en */,
+			);
+			name = TagCloudDoc.xib;
+			sourceTree = "<group>";
+		};
+		1E02BD85137B12B7005E1B35 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1E02BD86137B12B7005E1B35 /* en */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+		1E02BD97137B12B8005E1B35 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1E02BD98137B12B8005E1B35 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		1E02BDB2137B12B8005E1B35 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1E02BDB3137B12B8005E1B35 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		1E02BDBE137B12B8005E1B35 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		1E02BDBF137B12B8005E1B35 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		1E02BDC1137B12B8005E1B35 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TagCloudCreatorImporter/TagCloudCreatorImporter-Prefix.pch";
+				INFOPLIST_FILE = "TagCloudCreatorImporter/TagCloudCreatorImporter-Info.plist";
+				INSTALL_PATH = "@executable_path/../Contents/Library/Spotlight";
+				LIBRARY_STYLE = BUNDLE;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				WRAPPER_EXTENSION = mdimporter;
+			};
+			name = Debug;
+		};
+		1E02BDC2137B12B8005E1B35 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TagCloudCreatorImporter/TagCloudCreatorImporter-Prefix.pch";
+				INFOPLIST_FILE = "TagCloudCreatorImporter/TagCloudCreatorImporter-Info.plist";
+				INSTALL_PATH = "@executable_path/../Contents/Library/Spotlight";
+				LIBRARY_STYLE = BUNDLE;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				WRAPPER_EXTENSION = mdimporter;
+			};
+			name = Release;
+		};
+		1E02BDC4137B12B8005E1B35 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TagCloudCreator/TagCloudCreator-Prefix.pch";
+				INFOPLIST_FILE = "TagCloudCreator/TagCloudCreator-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		1E02BDC5137B12B8005E1B35 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TagCloudCreator/TagCloudCreator-Prefix.pch";
+				INFOPLIST_FILE = "TagCloudCreator/TagCloudCreator-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		1E02BDC7137B12B8005E1B35 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/TagCloudCreator.app/Contents/MacOS/TagCloudCreator";
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TagCloudCreatorTests/TagCloudCreatorTests-Prefix.pch";
+				INFOPLIST_FILE = "TagCloudCreatorTests/TagCloudCreatorTests-Info.plist";
+				OTHER_LDFLAGS = (
+					"-framework",
+					SenTestingKit,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Debug;
+		};
+		1E02BDC8137B12B8005E1B35 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/TagCloudCreator.app/Contents/MacOS/TagCloudCreator";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TagCloudCreatorTests/TagCloudCreatorTests-Prefix.pch";
+				INFOPLIST_FILE = "TagCloudCreatorTests/TagCloudCreatorTests-Info.plist";
+				OTHER_LDFLAGS = (
+					"-framework",
+					SenTestingKit,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1E02BD63137B12B7005E1B35 /* Build configuration list for PBXProject "TagCloudCreator" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1E02BDBE137B12B8005E1B35 /* Debug */,
+				1E02BDBF137B12B8005E1B35 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1E02BDC0137B12B8005E1B35 /* Build configuration list for PBXNativeTarget "TagCloudCreatorImporter" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1E02BDC1137B12B8005E1B35 /* Debug */,
+				1E02BDC2137B12B8005E1B35 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		1E02BDC3137B12B8005E1B35 /* Build configuration list for PBXNativeTarget "TagCloudCreator" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1E02BDC4137B12B8005E1B35 /* Debug */,
+				1E02BDC5137B12B8005E1B35 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		1E02BDC6137B12B8005E1B35 /* Build configuration list for PBXNativeTarget "TagCloudCreatorTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1E02BDC7137B12B8005E1B35 /* Debug */,
+				1E02BDC8137B12B8005E1B35 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		1E02BD88137B12B7005E1B35 /* TagCloudDoc.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				1E02BD89137B12B7005E1B35 /* TagCloudDoc.xcdatamodel */,
+			);
+			currentVersion = 1E02BD89137B12B7005E1B35 /* TagCloudDoc.xcdatamodel */;
+			path = TagCloudDoc.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = 1E02BD60137B12B7005E1B35 /* Project object */;
+}
