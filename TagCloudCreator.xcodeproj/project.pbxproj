@@ -28,6 +28,13 @@
 		1E02BDB7137B12B8005E1B35 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 1E02BDB6137B12B8005E1B35 /* main.c */; };
 		1E02BDB9137B12B8005E1B35 /* GetMetadataForFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E02BDB8137B12B8005E1B35 /* GetMetadataForFile.m */; };
 		1E02BDBC137B12B8005E1B35 /* MySpotlightImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E02BDBB137B12B8005E1B35 /* MySpotlightImporter.m */; };
+		1E02BDD3137B1448005E1B35 /* TagCloudView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E02BDD2137B1448005E1B35 /* TagCloudView.m */; };
+		1E02BDE3137B2648005E1B35 /* NSArray-Shuffle.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E02BDE2137B2648005E1B35 /* NSArray-Shuffle.m */; };
+		1E02BDE4137B2648005E1B35 /* NSArray-Shuffle.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E02BDE2137B2648005E1B35 /* NSArray-Shuffle.m */; };
+		1E02BDE5137B2648005E1B35 /* NSArray-Shuffle.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E02BDE2137B2648005E1B35 /* NSArray-Shuffle.m */; };
+		1E8C6BD7137B2C1C00849D36 /* Tag.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E8C6BD6137B2C1C00849D36 /* Tag.m */; };
+		1E8C6BDD137B2C3900849D36 /* TagGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E8C6BDC137B2C3900849D36 /* TagGroup.m */; };
+		1E8C6BE6137B302B00849D36 /* ColorCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E8C6BE5137B302B00849D36 /* ColorCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,20 +60,20 @@
 		1E02BD70137B12B7005E1B35 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		1E02BD71137B12B7005E1B35 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		1E02BD72137B12B7005E1B35 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		1E02BD75137B12B7005E1B35 /* TagCloudCreator-Info.plist */ = {isa = PBXFileReference; path = "TagCloudCreator-Info.plist"; sourceTree = "<group>"; };
+		1E02BD75137B12B7005E1B35 /* TagCloudCreator-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TagCloudCreator-Info.plist"; sourceTree = "<group>"; };
 		1E02BD77137B12B7005E1B35 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		1E02BD79137B12B7005E1B35 /* TagCloudCreator-Prefix.pch */ = {isa = PBXFileReference; path = "TagCloudCreator-Prefix.pch"; sourceTree = "<group>"; };
+		1E02BD79137B12B7005E1B35 /* TagCloudCreator-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TagCloudCreator-Prefix.pch"; sourceTree = "<group>"; };
 		1E02BD7A137B12B7005E1B35 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		1E02BD7D137B12B7005E1B35 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
-		1E02BD7F137B12B7005E1B35 /* TagCloudDoc.h */ = {isa = PBXFileReference; path = TagCloudDoc.h; sourceTree = "<group>"; };
+		1E02BD7F137B12B7005E1B35 /* TagCloudDoc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TagCloudDoc.h; sourceTree = "<group>"; };
 		1E02BD80137B12B7005E1B35 /* TagCloudDoc.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TagCloudDoc.m; sourceTree = "<group>"; };
 		1E02BD83137B12B7005E1B35 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/TagCloudDoc.xib; sourceTree = "<group>"; };
 		1E02BD86137B12B7005E1B35 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		1E02BD89137B12B7005E1B35 /* TagCloudDoc.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TagCloudDoc.xcdatamodel; sourceTree = "<group>"; };
 		1E02BD90137B12B8005E1B35 /* TagCloudCreatorTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TagCloudCreatorTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
-		1E02BD96137B12B8005E1B35 /* TagCloudCreatorTests-Info.plist */ = {isa = PBXFileReference; path = "TagCloudCreatorTests-Info.plist"; sourceTree = "<group>"; };
+		1E02BD96137B12B8005E1B35 /* TagCloudCreatorTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TagCloudCreatorTests-Info.plist"; sourceTree = "<group>"; };
 		1E02BD98137B12B8005E1B35 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		1E02BD9A137B12B8005E1B35 /* TagCloudCreatorTests-Prefix.pch */ = {isa = PBXFileReference; path = "TagCloudCreatorTests-Prefix.pch"; sourceTree = "<group>"; };
+		1E02BD9A137B12B8005E1B35 /* TagCloudCreatorTests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TagCloudCreatorTests-Prefix.pch"; sourceTree = "<group>"; };
 		1E02BD9B137B12B8005E1B35 /* TagCloudCreatorTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TagCloudCreatorTests.h; sourceTree = "<group>"; };
 		1E02BD9D137B12B8005E1B35 /* TagCloudCreatorTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TagCloudCreatorTests.m; sourceTree = "<group>"; };
 		1E02BDA3137B12B8005E1B35 /* TagCloudCreatorImporter.mdimporter */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TagCloudCreatorImporter.mdimporter; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -74,14 +81,24 @@
 		1E02BDA9137B12B8005E1B35 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		1E02BDAB137B12B8005E1B35 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		1E02BDAD137B12B8005E1B35 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		1E02BDB1137B12B8005E1B35 /* TagCloudCreatorImporter-Info.plist */ = {isa = PBXFileReference; path = "TagCloudCreatorImporter-Info.plist"; sourceTree = "<group>"; };
+		1E02BDB1137B12B8005E1B35 /* TagCloudCreatorImporter-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TagCloudCreatorImporter-Info.plist"; sourceTree = "<group>"; };
 		1E02BDB3137B12B8005E1B35 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		1E02BDB5137B12B8005E1B35 /* TagCloudCreatorImporter-Prefix.pch */ = {isa = PBXFileReference; path = "TagCloudCreatorImporter-Prefix.pch"; sourceTree = "<group>"; };
+		1E02BDB5137B12B8005E1B35 /* TagCloudCreatorImporter-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TagCloudCreatorImporter-Prefix.pch"; sourceTree = "<group>"; };
 		1E02BDB6137B12B8005E1B35 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		1E02BDB8137B12B8005E1B35 /* GetMetadataForFile.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GetMetadataForFile.m; sourceTree = "<group>"; };
-		1E02BDBA137B12B8005E1B35 /* MySpotlightImporter.h */ = {isa = PBXFileReference; path = MySpotlightImporter.h; sourceTree = "<group>"; };
+		1E02BDBA137B12B8005E1B35 /* MySpotlightImporter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MySpotlightImporter.h; sourceTree = "<group>"; };
 		1E02BDBB137B12B8005E1B35 /* MySpotlightImporter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MySpotlightImporter.m; sourceTree = "<group>"; };
-		1E02BDBD137B12B8005E1B35 /* Importer Read Me.txt */ = {isa = PBXFileReference; path = "Importer Read Me.txt"; sourceTree = "<group>"; };
+		1E02BDBD137B12B8005E1B35 /* Importer Read Me.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Importer Read Me.txt"; sourceTree = "<group>"; };
+		1E02BDD1137B1448005E1B35 /* TagCloudView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagCloudView.h; sourceTree = "<group>"; };
+		1E02BDD2137B1448005E1B35 /* TagCloudView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagCloudView.m; sourceTree = "<group>"; };
+		1E02BDE1137B2648005E1B35 /* NSArray-Shuffle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray-Shuffle.h"; sourceTree = "<group>"; };
+		1E02BDE2137B2648005E1B35 /* NSArray-Shuffle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray-Shuffle.m"; sourceTree = "<group>"; };
+		1E8C6BD5137B2C1C00849D36 /* Tag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tag.h; sourceTree = "<group>"; };
+		1E8C6BD6137B2C1C00849D36 /* Tag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tag.m; sourceTree = "<group>"; };
+		1E8C6BDB137B2C3900849D36 /* TagGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagGroup.h; sourceTree = "<group>"; };
+		1E8C6BDC137B2C3900849D36 /* TagGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagGroup.m; sourceTree = "<group>"; };
+		1E8C6BE4137B302B00849D36 /* ColorCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ColorCell.h; sourceTree = "<group>"; };
+		1E8C6BE5137B302B00849D36 /* ColorCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ColorCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -167,6 +184,10 @@
 				1E02BD82137B12B7005E1B35 /* TagCloudDoc.xib */,
 				1E02BD85137B12B7005E1B35 /* MainMenu.xib */,
 				1E02BD88137B12B7005E1B35 /* TagCloudDoc.xcdatamodeld */,
+				1E8C6BE0137B2C4900849D36 /* Entities */,
+				1E8C6BE3137B2FEB00849D36 /* Cells */,
+				1E8C6BE2137B2C8A00849D36 /* Views */,
+				1E8C6BE1137B2C7400849D36 /* Categories */,
 				1E02BD74137B12B7005E1B35 /* Supporting Files */,
 			);
 			path = TagCloudCreator;
@@ -225,6 +246,44 @@
 				1E02BDB6137B12B8005E1B35 /* main.c */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		1E8C6BE0137B2C4900849D36 /* Entities */ = {
+			isa = PBXGroup;
+			children = (
+				1E8C6BD5137B2C1C00849D36 /* Tag.h */,
+				1E8C6BD6137B2C1C00849D36 /* Tag.m */,
+				1E8C6BDB137B2C3900849D36 /* TagGroup.h */,
+				1E8C6BDC137B2C3900849D36 /* TagGroup.m */,
+			);
+			name = Entities;
+			sourceTree = "<group>";
+		};
+		1E8C6BE1137B2C7400849D36 /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				1E02BDE1137B2648005E1B35 /* NSArray-Shuffle.h */,
+				1E02BDE2137B2648005E1B35 /* NSArray-Shuffle.m */,
+			);
+			name = Categories;
+			sourceTree = "<group>";
+		};
+		1E8C6BE2137B2C8A00849D36 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				1E02BDD1137B1448005E1B35 /* TagCloudView.h */,
+				1E02BDD2137B1448005E1B35 /* TagCloudView.m */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		1E8C6BE3137B2FEB00849D36 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				1E8C6BE4137B302B00849D36 /* ColorCell.h */,
+				1E8C6BE5137B302B00849D36 /* ColorCell.m */,
+			);
+			name = Cells;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -367,6 +426,11 @@
 				1E02BD7B137B12B7005E1B35 /* main.m in Sources */,
 				1E02BD81137B12B7005E1B35 /* TagCloudDoc.m in Sources */,
 				1E02BD8A137B12B7005E1B35 /* TagCloudDoc.xcdatamodeld in Sources */,
+				1E02BDD3137B1448005E1B35 /* TagCloudView.m in Sources */,
+				1E02BDE3137B2648005E1B35 /* NSArray-Shuffle.m in Sources */,
+				1E8C6BD7137B2C1C00849D36 /* Tag.m in Sources */,
+				1E8C6BDD137B2C3900849D36 /* TagGroup.m in Sources */,
+				1E8C6BE6137B302B00849D36 /* ColorCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -375,6 +439,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1E02BD9E137B12B8005E1B35 /* TagCloudCreatorTests.m in Sources */,
+				1E02BDE4137B2648005E1B35 /* NSArray-Shuffle.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -385,6 +450,7 @@
 				1E02BDB7137B12B8005E1B35 /* main.c in Sources */,
 				1E02BDB9137B12B8005E1B35 /* GetMetadataForFile.m in Sources */,
 				1E02BDBC137B12B8005E1B35 /* MySpotlightImporter.m in Sources */,
+				1E02BDE5137B2648005E1B35 /* NSArray-Shuffle.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -616,6 +682,7 @@
 				1E02BDC2137B12B8005E1B35 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		1E02BDC3137B12B8005E1B35 /* Build configuration list for PBXNativeTarget "TagCloudCreator" */ = {
 			isa = XCConfigurationList;
@@ -624,6 +691,7 @@
 				1E02BDC5137B12B8005E1B35 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		1E02BDC6137B12B8005E1B35 /* Build configuration list for PBXNativeTarget "TagCloudCreatorTests" */ = {
 			isa = XCConfigurationList;
@@ -632,6 +700,7 @@
 				1E02BDC8137B12B8005E1B35 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

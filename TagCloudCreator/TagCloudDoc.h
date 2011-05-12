@@ -7,10 +7,24 @@
 //
 
 #import <Cocoa/Cocoa.h>
+@class TagCloudView;
+@class TagGroup, Tag;
 
-@interface TagCloudDoc : NSPersistentDocument {
+@interface TagCloudDoc : NSPersistentDocument <NSOutlineViewDataSource, NSOutlineViewDelegate, NSWindowDelegate> {
 @private
-
+	IBOutlet NSOutlineView *tagTree;
+	IBOutlet TagCloudView *tagCloudView;
+	TagGroup *selectedItemForColorEdit;
+	NSArray *tagGroups;
 }
+@property (readonly, retain) NSArray *tagGroups;
+@property (readonly, retain) NSArray *tags;
+- (TagGroup*)addTagGroup;
+- (Tag*)addTagToGroup:(TagGroup*)tagGroup;
+
+- (IBAction)pushShuffle:(id)sender;
+- (IBAction)pushAddGroup:(id)sender;
+- (IBAction)pushAddItem:(id)sender;
+- (IBAction)pushRemoveItem:(id)sender;
 
 @end
