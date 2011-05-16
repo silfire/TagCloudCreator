@@ -15,7 +15,7 @@
 -(BOOL)hasCollision:(CGRect)frame {
 	BOOL result = NO;
 	for (NSView *view in [cloudView subviews]) {
-		if (CGRectIntersectsRect(frame, [view frame])) {
+		if (CGRectIntersectsRect(frame, NSRectToCGRect([view frame]))) {
 			result = YES;
 			break;
 		}
@@ -28,7 +28,7 @@
 	// Remove old subviews
 	NSArray *views = [NSArray arrayWithArray:[cloudView subviews]];
 	for (NSView *view in views) [view removeFromSuperview];
-	[cloudView setFrame:CGRectMake(0, 0, [self frame].size.width, [self frame].size.height)];
+	[cloudView setFrame:NSMakeRect(0, 0, [self frame].size.width, [self frame].size.height)];
 	srand(42);
 }
 
@@ -36,8 +36,8 @@
 					   font:(NSFont*)font
 					  color:(NSColor*)color
 					  frame:(CGRect)frame {
-	NSTextField *textField = [[NSTextField alloc] initWithFrame:frame];
-	
+	NSTextField *textField = [[NSTextField alloc] initWithFrame:NSRectFromCGRect(frame)];
+
 	[textField setStringValue:text];
 	[textField setTextColor:color];
 	[textField setFont:font];
@@ -56,7 +56,7 @@
 				   [NSDictionary dictionaryWithObjectsAndKeys:
 					font, NSFontAttributeName, nil]];
 	size.width += 4;
-	CGRect superFrame = [cloudView frame];
+	CGRect superFrame = NSRectToCGRect([cloudView frame]);
 	CGFloat centerX = superFrame.size.width / 2.0f;
 	CGFloat centerY = superFrame.size.height / 2.0f;
 	CGRect textFrame;
@@ -64,7 +64,7 @@
 	if ([[cloudView subviews] count]==0) {
 		textFrame = CGRectMake(centerX-(size.width / 2.0f), centerY-(size.height / 2.0f), size.width, size.height);
 	} else {
-		CGFloat angle;
+		CGFloat angle = 0.0f;
 		CGFloat distance = 0.0f;
 		
 		do {
@@ -96,6 +96,7 @@
     if (self) {
         // Initialization code here.
 		cloudView = [[[NSView alloc] initWithFrame:frame] autorelease];
+		[cloudView setAutoresizingMask: NSViewMinXMargin | NSViewMaxXMargin | NSViewMinYMargin | NSViewMaxYMargin];
 		[self addSubview:cloudView];
     }
     return self;

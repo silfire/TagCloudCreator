@@ -25,6 +25,7 @@
 - (TagGroup*)addTagGroup;
 - (Tag*)addTagToGroup:(TagGroup*)tagGroup;
 - (NSArray*)shuffleAllTags;
+- (void)drawCloudWithTags:(NSArray*)tags;
 
 - (IBAction)pushShuffle:(id)sender;
 - (IBAction)pushRedraw:(id)sender;
