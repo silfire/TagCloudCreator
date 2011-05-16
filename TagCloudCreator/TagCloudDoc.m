@@ -92,9 +92,13 @@
 #pragma mark Notifications
 
 - (void)managedObjectsDidChangeNotification:(NSNotification*)notification {
-	self.tagGroups = nil;
+	NSDictionary *userInfo = [notification userInfo];
+	if (([[userInfo objectForKey:NSInsertedObjectsKey] count]>0) ||
+		([[userInfo objectForKey:NSDeletedObjectsKey] count]>0)) {
+		self.tagGroups = nil;
+	}
 	[tagTree reloadData];
-	[self drawCloudWithTags: self.tags];
+	[self drawCloudWithTags:self.tags];
 }
 
 #pragma mark Manage Objects

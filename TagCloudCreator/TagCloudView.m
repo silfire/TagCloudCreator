@@ -30,6 +30,21 @@
 	for (NSView *view in views) [view removeFromSuperview];
 	[cloudView setFrame:NSMakeRect(0, 0, [self frame].size.width, [self frame].size.height)];
 	srand(42);
+	[tagCache removeAllObjects];
+}
+
+- (void)recalculateAllTags {
+	NSSize oldSize = [cloudView frame].size;
+	[cloudView setFrame:NSMakeRect(0, 0, [self frame].size.width, [self frame].size.height)];
+	NSSize newSize = [cloudView frame].size;
+	NSSize delta = NSMakeSize(newSize.width-oldSize.width, newSize.height-oldSize.height);
+
+	for (NSView *tagView in tagCache) {
+		NSRect frame = [tagView frame];
+		frame.origin.x += delta.width/2.0f;
+		frame.origin.y += delta.height/2.0f;
+		[tagView setFrame:frame];
+	}
 }
 
 - (void)createLabelWithText:(NSString*)text
@@ -47,7 +62,10 @@
 	[textField setEditable:NO];
 	[textField setBackgroundColor:[NSColor clearColor]];
 	[textField setAutoresizingMask:0];
+
 	[cloudView addSubview:textField];
+	[tagCache addObject:textField];
+
 	[textField release];
 }
 
@@ -89,12 +107,20 @@
 - (void)drawRect:(NSRect)dirtyRect {
     // Drawing code here.
 }
+- (BOOL) needsDisplay {
+	BOOL result = [super needsDisplay];
+	if (result) {
+		[self recalculateAllTags];
+	}
+	return result;
+}
 
 #pragma mark Initialization
 - (id)initWithFrame:(NSRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code here.
+		tagCache = [[NSMutableArray alloc] init];
 		cloudView = [[[NSView alloc] initWithFrame:frame] autorelease];
 		[cloudView setAutoresizingMask: NSViewMinXMargin | NSViewMaxXMargin | NSViewMinYMargin | NSViewMaxYMargin];
 		[self addSubview:cloudView];
@@ -102,6 +128,7 @@
     return self;
 }
 - (void)dealloc {
+	[tagCache release];
     [super dealloc];
 }
 

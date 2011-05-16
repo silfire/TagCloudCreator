@@ -12,6 +12,7 @@
 @interface TagCloudView : NSView {
 @private
 	NSView* cloudView;
+	NSMutableArray *tagCache;
 }
 @property (nonatomic, assign) IBOutlet NSView* cloudView;
 
@@ -24,4 +25,5 @@
 
 - (CGRect)calculatePositionForString:(NSString*)text withFont:(NSFont*)font;
 
+- (void)recalculateAllTags;
 @end
