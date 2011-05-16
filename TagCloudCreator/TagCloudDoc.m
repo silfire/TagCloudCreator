@@ -63,6 +63,23 @@
 	}
 }
 
+- (IBAction)pushSlider:(id)sender {
+	NSInteger selection = [tagTree selectedRow];
+	if (selection>=0) {
+		id item = [tagTree itemAtRow:selection];
+		if ([item class]==[Tag class]) {
+			Tag *tag = item;
+			tag.ratio = [NSNumber numberWithInteger: [sizeSlider integerValue]];
+		} else {
+			for (Tag *tag in [item tags]) {
+				tag.ratio = [NSNumber numberWithInteger: [sizeSlider integerValue]];
+			}
+		}
+		[self drawCloudWithTags:self.tags];
+	}
+	[sizeTextField setIntegerValue:[sizeSlider integerValue]];
+}
+
 - (void)pushColor:(id)sender {
 	NSColorPanel *panel = [NSColorPanel sharedColorPanel];
 	NSInteger selection = [tagTree selectedRow];
@@ -132,7 +149,7 @@
 	[tagCloudView clearCloud];
 	for (Tag *dataSet in tags) {
 		NSString *text = dataSet.text;
-		NSInteger size = [dataSet.ratio integerValue]*20;
+		NSInteger size = [dataSet.ratio integerValue];
 		NSFont *font = [NSFont systemFontOfSize:size];
 		CGRect textFrame = [tagCloudView calculatePositionForString:text withFont:font];
 		[tagCloudView createLabelWithText:text
@@ -180,6 +197,18 @@
 
 - (void) outlineView:(NSOutlineView *)outlineView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn byItem:(id)item {
 	[item setValue:object forKey:[tableColumn identifier]];
+}
+
+- (void) outlineViewSelectionDidChange:(NSNotification *)notification {
+	NSInteger selection = [tagTree selectedRow];
+	if (selection>=0) {
+		id item = [tagTree itemAtRow:selection];
+		if ([item class]==[Tag class]) {
+			Tag *tag = item;
+			[sizeSlider setIntegerValue: [tag.ratio integerValue]];
+			[sizeTextField setIntegerValue:[tag.ratio integerValue]];
+		}
+	}
 }
 
 #pragma mark Manual Properties

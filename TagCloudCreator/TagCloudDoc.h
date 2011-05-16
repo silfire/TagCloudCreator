@@ -14,6 +14,8 @@
 @private
 	IBOutlet NSOutlineView *tagTree;
 	IBOutlet TagCloudView *tagCloudView;
+	IBOutlet NSSlider *sizeSlider;
+	IBOutlet NSTextField *sizeTextField;
 	TagGroup *selectedItemForColorEdit;
 	NSArray *tagGroups;
 }
@@ -31,5 +33,6 @@
 - (IBAction)pushAddGroup:(id)sender;
 - (IBAction)pushAddItem:(id)sender;
 - (IBAction)pushRemoveItem:(id)sender;
+- (IBAction)pushSlider:(id)sender;
 
 @end
