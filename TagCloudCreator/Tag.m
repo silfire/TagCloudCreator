@@ -17,7 +17,7 @@
 
 - (void) awakeFromInsert {
 	self.text = @"New Item";
-	self.ratio = [NSNumber numberWithInt:1];
+	self.ratio = [NSNumber numberWithInt:20];
 }
 
 - (NSColor*)color {

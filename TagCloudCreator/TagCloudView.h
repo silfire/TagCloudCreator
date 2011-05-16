@@ -11,8 +11,10 @@
 
 @interface TagCloudView : NSView {
 @private
-	IBOutlet NSView* cloudView;
+	NSView* cloudView;
+	NSMutableArray *tagCache;
 }
+@property (nonatomic, assign) IBOutlet NSView* cloudView;
 
 - (void)clearCloud;
 
@@ -23,4 +25,5 @@
 
 - (CGRect)calculatePositionForString:(NSString*)text withFont:(NSFont*)font;
 
+- (void)recalculateAllTags;
 @end
