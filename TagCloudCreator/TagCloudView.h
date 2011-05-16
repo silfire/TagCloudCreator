@@ -11,8 +11,9 @@
 
 @interface TagCloudView : NSView {
 @private
-	IBOutlet NSView* cloudView;
+	NSView* cloudView;
 }
+@property (nonatomic, assign) IBOutlet NSView* cloudView;
 
 - (void)clearCloud;
 

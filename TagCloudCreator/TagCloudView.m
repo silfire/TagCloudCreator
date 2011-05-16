@@ -9,6 +9,7 @@
 #import "TagCloudView.h"
 
 @implementation TagCloudView
+@synthesize cloudView;
 
 #pragma mark Private
 -(BOOL)hasCollision:(CGRect)frame {
@@ -94,8 +95,9 @@
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code here.
+		cloudView = [[[NSView alloc] initWithFrame:frame] autorelease];
+		[self addSubview:cloudView];
     }
-    
     return self;
 }
 - (void)dealloc {
