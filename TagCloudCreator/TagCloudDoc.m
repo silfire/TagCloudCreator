@@ -195,6 +195,114 @@
 	[array retain];
 }
 
+#pragma mark Printing
+
+- (NSRect)coordinatesOfPrintingArea {
+    
+    /*
+    // The drawing bounds of an array of graphics is the union of all of their drawing bounds.
+    NSRect drawingBounds = NSZeroRect;
+    
+    NSArray *subTagCloudViews = [tagCloudView subviews];
+    unsigned int graphicCount = (unsigned int)[subTagCloudViews count];
+    if (subTagCloudViews>0) {
+		drawingBounds = [(NSView *)[subTagCloudViews objectAtIndex:0] bounds];
+		for (unsigned int index = 1; index<graphicCount; index++) {
+            drawingBounds = NSUnionRect(drawingBounds, [[subTagCloudViews objectAtIndex:index] drawingBounds]);
+		}
+    }
+    return drawingBounds;
+    */
+    
+    
+     
+    NSMutableArray *coordinateLeft, *coordinateRight, *coordinateBottom, *coordinateTop;
+    coordinateLeft = [[NSMutableArray alloc] init];
+    coordinateRight = [[NSMutableArray alloc] init];
+    coordinateBottom = [[NSMutableArray alloc] init];
+    coordinateTop = [[NSMutableArray alloc] init];
+    
+    NSArray *subTagCloudViews = [tagCloudView subviews];
+    NSView *subTagCloudView = [subTagCloudViews objectAtIndex:0];
+    
+    for (NSView *view in [subTagCloudView subviews]) {
+        [coordinateLeft addObject:[NSNumber numberWithFloat:view.frame.origin.x]];
+        [coordinateRight addObject:[NSNumber numberWithFloat:(view.frame.origin.x + view.frame.size.width)]];
+        [coordinateBottom addObject:[NSNumber numberWithFloat:view.frame.origin.y]];
+        [coordinateTop addObject:[NSNumber numberWithFloat:(view.frame.origin.y + view.frame.size.height)]]; 
+    }
+   
+    NSSortDescriptor *mySorterAscending = [[NSSortDescriptor alloc] initWithKey:@"self" ascending:YES];
+    NSSortDescriptor *mySorterDescending = [[NSSortDescriptor alloc] initWithKey:@"self" ascending:NO];        
+                                            
+    [coordinateLeft sortUsingDescriptors:[NSArray arrayWithObject:mySorterAscending]];
+    [coordinateRight sortUsingDescriptors:[NSArray arrayWithObject:mySorterDescending]];
+    [coordinateBottom sortUsingDescriptors:[NSArray arrayWithObject:mySorterAscending]];
+    [coordinateTop sortUsingDescriptors:[NSArray arrayWithObject:mySorterDescending]];
+   
+    /*
+    NSArray *subTagCloudViews = [tagCloudView subviews];
+    if ([subTagCloudViews count] > 0) {
+        NSView *subTagCloudView = [subTagCloudViews objectAtIndex:0];
+        CGFloat coordinateLeft, leftHelper;
+        leftHelper = 0.0f;
+        for (NSView *view in [subTagCloudView subviews]) {
+            coordinateLeft = view.frame.origin.x;
+            if ((coordinateLeft < leftHelper) || (coordinateLeft = leftHelper)) {
+                
+            }
+            
+        }
+    
+    
+    }
+    */
+    NSPoint origin;
+    origin.x = 0;
+    origin.y = 0;
+    NSSize size;
+    size.width = [[coordinateRight objectAtIndex:0] floatValue] - [[coordinateLeft objectAtIndex:0] floatValue]; //right - left;
+    size.height = [[coordinateTop objectAtIndex:0] floatValue] - [[coordinateBottom objectAtIndex:0] floatValue]; 
+    NSRect result = NSZeroRect;
+    result.origin = origin;
+    result.size = size;
+    
+    return result;
+    
+}
+
+-(NSView *)copyViewsToPrintView:(NSRect)rectToPrint {
+    
+    NSView *viewToPrint = [[NSView alloc] initWithFrame:rectToPrint];
+
+    NSArray *subTagCloudViews = [tagCloudView subviews];
+    NSView *subTagCloudView = [subTagCloudViews objectAtIndex:0];
+    
+    NSView *viewCopy;
+    for (NSView *view in [subTagCloudView subviews]) {
+        viewCopy = [view copy];
+        [viewToPrint addSubview:viewCopy];
+    }
+    
+    return viewToPrint;
+}
+
+
+- (void)printDocument:(id)sender {
+    NSRect rectToPrint = [self coordinatesOfPrintingArea];
+    NSView *viewToPrint = [self copyViewsToPrintView:rectToPrint];
+    
+    NSPrintInfo *printInfo = [NSPrintInfo sharedPrintInfo];
+    [printInfo setHorizontallyCentered:YES];
+    [printInfo setVerticallyCentered:YES];
+    [printInfo setHorizontalPagination:NSFitPagination];
+    [printInfo setVerticalPagination:NSFitPagination];
+    
+    [viewToPrint print:self];
+//    NSLog(@"Drucken ist noch nicht implementiert.");
+}
+
+#pragma mark -
 #pragma mark Initialization
 
 - (id)init {
@@ -225,6 +333,8 @@
 	ColorCell *cell = [[[tagTree tableColumns] objectAtIndex:index] dataCell];
 	[cell setAction:@selector(pushColor:)];
 	[cell setTarget:self];
+    
+
 }
 
 @end

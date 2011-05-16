@@ -83,6 +83,7 @@
 	return textFrame;
 }
 
+
 #pragma mark Drawing
 - (void)drawRect:(NSRect)dirtyRect {
     // Drawing code here.

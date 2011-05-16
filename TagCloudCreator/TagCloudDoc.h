@@ -16,9 +16,12 @@
 	IBOutlet TagCloudView *tagCloudView;
 	TagGroup *selectedItemForColorEdit;
 	NSArray *tagGroups;
+
 }
 @property (readonly, retain) NSArray *tagGroups;
 @property (readonly, retain) NSArray *tags;
+
+
 - (TagGroup*)addTagGroup;
 - (Tag*)addTagToGroup:(TagGroup*)tagGroup;
 
