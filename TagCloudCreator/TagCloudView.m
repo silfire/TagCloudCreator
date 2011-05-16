@@ -106,6 +106,10 @@
 #pragma mark Drawing
 - (void)drawRect:(NSRect)dirtyRect {
     // Drawing code here.
+	[[NSColor whiteColor] set];
+    [NSBezierPath fillRect:dirtyRect];
+	[[NSColor shadowColor] set];
+	[NSBezierPath strokeRect:dirtyRect];
 }
 - (BOOL) needsDisplay {
 	BOOL result = [super needsDisplay];
