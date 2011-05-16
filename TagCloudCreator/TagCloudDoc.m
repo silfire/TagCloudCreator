@@ -16,6 +16,9 @@
 #define TagGroupEntityKey @"TagGroup"
 #define TagEntityKey @"Tag"
 
+#define OutlineViewColorColumnName @"color"
+#define OutlineViewTextColumnName @"text"
+
 @interface TagCloudDoc ()
 @property (readwrite, retain) NSArray *tagGroups;
 @property (retain) 	TagGroup *selectedItemForColorEdit;
@@ -29,7 +32,23 @@
 - (IBAction)pushShuffle:(id)sender {
 	[tagCloudView clearCloud];
 	
-	NSArray *shuffledArray = [self.tags shuffledArray];
+	NSArray *shuffledArray = [self shuffleAllTags];
+	for (Tag *dataSet in shuffledArray) {
+		NSString *text = dataSet.text;
+		NSInteger size = [dataSet.ratio integerValue]*20;
+		NSFont *font = [NSFont systemFontOfSize:size];
+		CGRect textFrame = [tagCloudView calculatePositionForString:text withFont:font];
+		[tagCloudView createLabelWithText:text
+									 font:font
+									color:dataSet.color
+									frame:textFrame];
+	}
+}
+
+- (IBAction)pushRedraw:(id)sender {
+	[tagCloudView clearCloud];
+	
+	NSArray *shuffledArray = self.tags;
 	for (Tag *dataSet in shuffledArray) {
 		NSString *text = dataSet.text;
 		NSInteger size = [dataSet.ratio integerValue]*20;
@@ -65,13 +84,10 @@
 	if (selection>=0) {
 		id item = [tagTree itemAtRow:selection];
 		[[self managedObjectContext] deleteObject:item];
-		self.tagGroups = nil;
-		[tagTree reloadData];
 	}
 }
 
 - (void)pushColor:(id)sender {
-	NSLog(@"Color Button pressed!");
 	NSColorPanel *panel = [NSColorPanel sharedColorPanel];
 	NSInteger selection = [tagTree selectedRow];
 	id item = [tagTree itemAtRow:selection];
@@ -91,8 +107,16 @@
 	
 }
 
+#pragma mark Color Panel Delegates
+
 - (void) changeColor:(id)sender {
 	self.selectedItemForColorEdit.color = [sender color];
+}
+
+#pragma mark Notifications
+
+- (void)managedObjectsDidChangeNotification:(NSNotification*)notification {
+	self.tagGroups = nil;
 	[tagTree reloadData];
 }
 
@@ -102,9 +126,6 @@
 	NSEntityDescription *entity = [[managedObjectModel entitiesByName] objectForKey:TagGroupEntityKey];
 	TagGroup *tagGroup = [[TagGroup alloc] initWithEntity:entity
 						   insertIntoManagedObjectContext:[self managedObjectContext]];
-
-	self.tagGroups = nil;
-	[tagTree reloadData];
 	return tagGroup;
 }
 
@@ -113,11 +134,17 @@
 	NSEntityDescription *entity = [[managedObjectModel entitiesByName] objectForKey:TagEntityKey];
 	Tag *tag = [[Tag alloc] initWithEntity:entity
 				 insertIntoManagedObjectContext:[self managedObjectContext]];
-
 	tag.group = tagGroup;
-
-	[tagTree reloadData];
 	return tag;
+}
+
+- (NSArray*)shuffleAllTags {
+	NSArray *shuffledArray = [self.tags shuffledArray];
+	NSUInteger i = 0;
+	for (Tag *tag in shuffledArray) {
+		tag.sortIndex = [NSNumber numberWithUnsignedInteger:i++];
+	}
+	return shuffledArray;
 }
 
 #pragma mark Outline View Data Source
@@ -166,33 +193,37 @@
 		NSFetchRequest *request = [[NSFetchRequest alloc] init];
 		NSEntityDescription *entity = [[[self managedObjectModel] entitiesByName] objectForKey:TagGroupEntityKey];
 		[request setEntity:entity];
-
+		
+		NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:TagPropertyTextKey
+																		 ascending:YES];
+		[request setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
+		
 		NSError *error;
 		self.tagGroups = [self.managedObjectContext executeFetchRequest:request error:&error];
 		[request release];
-		
 	}
-	
 	return tagGroups;
+}
+
+- (void)setTagGroups:(NSArray *)array {
+	[tagGroups release];
+	tagGroups = array;
+	[array retain];
 }
 - (NSArray*)tags {
 	NSArray* tags = nil;
 	NSFetchRequest *request = [[NSFetchRequest alloc] init];
 	NSEntityDescription *entity = [[[self managedObjectModel] entitiesByName] objectForKey:TagEntityKey];
 	[request setEntity:entity];
-		
+
+	NSSortDescriptor *sortDescriptor1 = [NSSortDescriptor sortDescriptorWithKey:TagPropertySortIndexKey ascending:YES];
+	NSSortDescriptor *sortDescriptor2 = [NSSortDescriptor sortDescriptorWithKey:TagPropertyTextKey ascending:YES];
+	[request setSortDescriptors:[NSArray arrayWithObjects:sortDescriptor1, sortDescriptor2, nil]];
+
 	NSError *error;
 	tags = [self.managedObjectContext executeFetchRequest:request error:&error];
 	[request release];
 	return tags;
-}
-
-
-
-- (void)setTagGroups:(NSArray *)array {
-	[tagGroups release];
-	tagGroups = array;
-	[array retain];
 }
 
 #pragma mark Printing
@@ -317,6 +348,9 @@
 - (void)dealloc {
 	[tagGroups release];
 	[selectedItemForColorEdit release];
+	
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	
     [super dealloc];
 }
 
@@ -329,12 +363,15 @@
 - (void)windowControllerDidLoadNib:(NSWindowController *)aController {
 	[super windowControllerDidLoadNib:aController];
 	// Add any code here that needs to be executed once the windowController has loaded the document's window.
-	NSInteger index = [tagTree columnWithIdentifier:@"color"];
+	NSInteger index = [tagTree columnWithIdentifier:OutlineViewColorColumnName];
 	ColorCell *cell = [[[tagTree tableColumns] objectAtIndex:index] dataCell];
 	[cell setAction:@selector(pushColor:)];
 	[cell setTarget:self];
-    
-
+	
+	[[NSNotificationCenter defaultCenter] addObserver: self
+											 selector: @selector(managedObjectsDidChangeNotification:)
+												 name: NSManagedObjectContextObjectsDidChangeNotification
+											   object: [self managedObjectContext]];
 }
 
 @end

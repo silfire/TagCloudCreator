@@ -24,8 +24,10 @@
 
 - (TagGroup*)addTagGroup;
 - (Tag*)addTagToGroup:(TagGroup*)tagGroup;
+- (NSArray*)shuffleAllTags;
 
 - (IBAction)pushShuffle:(id)sender;
+- (IBAction)pushRedraw:(id)sender;
 - (IBAction)pushAddGroup:(id)sender;
 - (IBAction)pushAddItem:(id)sender;
 - (IBAction)pushRemoveItem:(id)sender;
