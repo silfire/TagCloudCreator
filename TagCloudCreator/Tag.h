@@ -10,6 +10,12 @@
 #import <CoreData/CoreData.h>
 @class TagGroup;
 
+#define TagPropertyTextKey @"text"
+#define TagPropertySortIndexKey @"sortIndex"
+#define TagPropertyRatioKey @"ratio"
+#define TagPropertyGroupKey @"group"
+#define TagPropertyColorKey @"color"
+
 @interface Tag : NSManagedObject {
 @private
 }
