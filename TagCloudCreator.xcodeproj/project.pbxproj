@@ -99,6 +99,7 @@
 		1E8C6BDC137B2C3900849D36 /* TagGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagGroup.m; sourceTree = "<group>"; };
 		1E8C6BE4137B302B00849D36 /* ColorCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ColorCell.h; sourceTree = "<group>"; };
 		1E8C6BE5137B302B00849D36 /* ColorCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ColorCell.m; sourceTree = "<group>"; };
+		D02CFE461382A37800AC8061 /* README */ = {isa = PBXFileReference; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -201,6 +202,7 @@
 				1E02BD79137B12B7005E1B35 /* TagCloudCreator-Prefix.pch */,
 				1E02BD7A137B12B7005E1B35 /* main.m */,
 				1E02BD7C137B12B7005E1B35 /* Credits.rtf */,
+				D02CFE461382A37800AC8061 /* README */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
