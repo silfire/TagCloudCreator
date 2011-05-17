@@ -201,12 +201,30 @@
 
 - (void) outlineViewSelectionDidChange:(NSNotification *)notification {
 	NSInteger selection = [tagTree selectedRow];
+	Tag *tag;
 	if (selection>=0) {
 		id item = [tagTree itemAtRow:selection];
 		if ([item class]==[Tag class]) {
-			Tag *tag = item;
+			tag = item;
 			[sizeSlider setIntegerValue: [tag.ratio integerValue]];
 			[sizeTextField setIntegerValue:[tag.ratio integerValue]];
+		} else {
+			NSInteger i = -1;
+			for (tag in [item tags]) {
+				if (i>=0 && [tag.ratio integerValue]!=i) {
+					i=-1;
+					break;
+				} else {
+					i = [tag.ratio integerValue];
+				}
+			}
+			if (i>=0) {
+				tag = [[(TagGroup*)item tags] anyObject];
+				[sizeSlider setIntegerValue: [tag.ratio integerValue]];
+				[sizeTextField setIntegerValue:[tag.ratio integerValue]];
+			} else {
+				[sizeTextField setStringValue:@"--"];
+			}
 		}
 	}
 }
