@@ -79,7 +79,7 @@
 							<string key="NSFrame">{{219, 460}, {96, 32}}</string>
 							<reference key="NSSuperview" ref="568628114"/>
 							<reference key="NSWindow"/>
-							<reference key="NSNextKeyView" ref="353313889"/>
+							<reference key="NSNextKeyView" ref="425677681"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="320735178">
 								<int key="NSCellFlags">67239424</int>
@@ -488,13 +488,35 @@
 								<reference key="NSTextColor" ref="207341858"/>
 							</object>
 						</object>
+						<object class="NSButton" id="425677681">
+							<reference key="NSNextResponder" ref="568628114"/>
+							<int key="NSvFlags">265</int>
+							<string key="NSFrame">{{568, 460}, {96, 32}}</string>
+							<reference key="NSSuperview" ref="568628114"/>
+							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView" ref="353313889"/>
+							<bool key="NSEnabled">YES</bool>
+							<object class="NSButtonCell" key="NSCell" id="182137261">
+								<int key="NSCellFlags">67239424</int>
+								<int key="NSCellFlags2">134217728</int>
+								<string key="NSContents">Font</string>
+								<reference key="NSSupport" ref="1013922033"/>
+								<reference key="NSControlView" ref="425677681"/>
+								<int key="NSButtonFlags">-2038284033</int>
+								<int key="NSButtonFlags2">129</int>
+								<string key="NSAlternateContents"/>
+								<string key="NSKeyEquivalent"/>
+								<int key="NSPeriodicDelay">200</int>
+								<int key="NSPeriodicInterval">25</int>
+							</object>
+						</object>
 					</object>
 					<string key="NSFrame">{{7, 11}, {678, 508}}</string>
 					<reference key="NSSuperview"/>
 					<reference key="NSWindow"/>
 					<reference key="NSNextKeyView" ref="254173220"/>
 				</object>
-				<string key="NSScreenRect">{{0, 0}, {1920, 1178}}</string>
+				<string key="NSScreenRect">{{0, 0}, {1920, 1058}}</string>
 				<string key="NSMinSize">{678, 530}</string>
 				<string key="NSMaxSize">{1e+13, 1e+13}</string>
 			</object>
@@ -612,6 +634,14 @@
 					</object>
 					<int key="connectionID">100105</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">pushFont:</string>
+						<reference key="source" ref="512844837"/>
+						<reference key="destination" ref="425677681"/>
+					</object>
+					<int key="connectionID">100108</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -657,6 +687,7 @@
 							<reference ref="353313889"/>
 							<reference ref="592682064"/>
 							<reference ref="344550979"/>
+							<reference ref="425677681"/>
 						</object>
 						<reference key="parent" ref="275939982"/>
 					</object>
@@ -837,6 +868,20 @@
 						<reference key="object" ref="662846897"/>
 						<reference key="parent" ref="0"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">100106</int>
+						<reference key="object" ref="425677681"/>
+						<object class="NSMutableArray" key="children">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<reference ref="182137261"/>
+						</object>
+						<reference key="parent" ref="568628114"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">100107</int>
+						<reference key="object" ref="182137261"/>
+						<reference key="parent" ref="425677681"/>
+					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -872,6 +917,9 @@
 					<string>100083.IBNumberFormatterBehaviorMetadataKey</string>
 					<string>100083.IBNumberFormatterLocalizesFormatMetadataKey</string>
 					<string>100083.IBPluginDependency</string>
+					<string>100094.IBPluginDependency</string>
+					<string>100106.IBPluginDependency</string>
+					<string>100107.IBPluginDependency</string>
 					<string>5.IBEditorWindowLastContentRect</string>
 					<string>5.IBPluginDependency</string>
 					<string>5.IBWindowTemplateEditedContentRect</string>
@@ -911,6 +959,9 @@
 					<integer value="1041"/>
 					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{133, 170}, {507, 413}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{133, 170}, {507, 413}}</string>
@@ -932,7 +983,7 @@
 				<reference key="dict.values" ref="0"/>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">100105</int>
+			<int key="maxID">100108</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -1021,6 +1072,7 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>pushAddGroup:</string>
 							<string>pushAddItem:</string>
+							<string>pushFont:</string>
 							<string>pushRedraw:</string>
 							<string>pushRemoveItem:</string>
 							<string>pushShuffle:</string>
@@ -1030,6 +1082,7 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>id</string>
 							<string>id</string>
+							<string>NSButton</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -1042,6 +1095,7 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>pushAddGroup:</string>
 							<string>pushAddItem:</string>
+							<string>pushFont:</string>
 							<string>pushRedraw:</string>
 							<string>pushRemoveItem:</string>
 							<string>pushShuffle:</string>
@@ -1056,6 +1110,10 @@
 							<object class="IBActionInfo">
 								<string key="name">pushAddItem:</string>
 								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">pushFont:</string>
+								<string key="candidateClassName">NSButton</string>
 							</object>
 							<object class="IBActionInfo">
 								<string key="name">pushRedraw:</string>

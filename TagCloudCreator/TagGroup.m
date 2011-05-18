@@ -11,6 +11,7 @@
 
 
 @implementation TagGroup
+@dynamic fontData;
 @dynamic colorData;
 @dynamic text;
 @dynamic tags;
@@ -18,14 +19,25 @@
 - (void) awakeFromInsert {
 	self.text = @"New Group";
 	self.color = [NSColor blackColor];
+    self.font = [NSFont systemFontOfSize:30.0f];
 }
 
+#pragma mark Setter & Getter
 - (NSColor*)color {
 	return [NSKeyedUnarchiver unarchiveObjectWithData:self.colorData];
 }
 - (void)setColor:(NSColor*)obj {
 	self.colorData = [NSKeyedArchiver archivedDataWithRootObject:obj];
 }
+
+- (NSFont*)font {
+	return [NSKeyedUnarchiver unarchiveObjectWithData:self.fontData];
+}
+- (void)setFont:(NSFont*)obj {
+	self.fontData = [NSKeyedArchiver archivedDataWithRootObject:obj];
+}
+
+#pragma mark Core Data Foo
 
 - (void)addTagsObject:(Tag *)value {    
     NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];
