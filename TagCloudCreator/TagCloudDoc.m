@@ -294,7 +294,7 @@
 	NSArray *tags = self.tags;
 	for (Tag *dataSet in tags) {
 		NSString *text = dataSet.text;
-		NSInteger size = [dataSet.ratio integerValue]*20;
+		NSInteger size = [dataSet.ratio integerValue];
 		NSFont *font = [NSFont systemFontOfSize:size];
 		CGRect textFrame = [viewToPrint calculatePositionForString:text withFont:font];
 		[viewToPrint createLabelWithText:text
