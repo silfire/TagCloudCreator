@@ -15,6 +15,7 @@
 #define TagPropertyRatioKey @"ratio"
 #define TagPropertyGroupKey @"group"
 #define TagPropertyColorKey @"color"
+#define TagPropertyFontKey @"font"
 
 @interface Tag : NSManagedObject {
 @private
@@ -25,5 +26,6 @@
 @property (nonatomic, retain) TagGroup * group;
 
 @property (readonly, nonatomic, retain) NSColor* color;
+@property (readonly, nonatomic, retain) NSFont *font;
 
 @end

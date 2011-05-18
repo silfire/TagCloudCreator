@@ -13,10 +13,13 @@
 
 @interface TagGroup : NSManagedObject {
 @private
+    
 }
-@property (nonatomic, assign) NSColor* color;
 
+@property (nonatomic, assign) NSColor* color;
 @property (nonatomic, retain) NSData * colorData;
+@property (nonatomic, assign) NSFont* font;
+@property (nonatomic, retain) NSData * fontData;
 @property (nonatomic, retain) NSString * text;
 @property (nonatomic, retain) NSSet* tags;
 

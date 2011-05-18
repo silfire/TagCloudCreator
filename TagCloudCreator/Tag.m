@@ -24,4 +24,8 @@
 	return self.group.color;
 }
 
+- (NSFont*)font {
+	return self.group.font;
+}
+
 @end

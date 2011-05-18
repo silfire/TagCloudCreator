@@ -22,10 +22,13 @@
 @interface TagCloudDoc ()
 @property (readwrite, retain) NSArray *tagGroups;
 @property (retain) 	TagGroup *selectedItemForColorEdit;
+@property (retain) 	TagGroup *selectedItemForFontEdit;
+@property (retain) 	TagGroup *selectedItemForEdit;
 @end
 
 @implementation TagCloudDoc
-@synthesize selectedItemForColorEdit;
+@synthesize selectedItemForColorEdit, selectedItemForFontEdit, selectedItemForEdit;
+@synthesize fontManager;
 
 #pragma mark Actions
 
@@ -80,9 +83,10 @@
 	[sizeTextField setIntegerValue:[sizeSlider integerValue]];
 }
 
-- (void)pushColor:(id)sender {
-	NSColorPanel *panel = [NSColorPanel sharedColorPanel];
-	NSInteger selection = [tagTree selectedRow];
+
+- (IBAction)pushFont:(id)sender {
+ /* 
+    NSInteger selection = [tagTree selectedRow];
 	id item = [tagTree itemAtRow:selection];
 	TagGroup *group;
 	if ([item class]==[Tag class]) {
@@ -90,8 +94,27 @@
 	} else {
 		group = item;
 	}
-	self.selectedItemForColorEdit = group;
-	[panel setColor:group.color];
+	self.selectedItemForEdit = group;
+*/
+	[fontManager setSelectedFont:selectedItemForEdit.font isMultiple:NO];
+    [fontManager orderFrontFontPanel:self];
+}
+
+- (void)pushColor:(id)sender {
+	NSColorPanel *panel = [NSColorPanel sharedColorPanel];
+
+/*
+    NSInteger selection = [tagTree selectedRow];
+	id item = [tagTree itemAtRow:selection];
+	TagGroup *group;
+	if ([item class]==[Tag class]) {
+		group = [item group];
+	} else {
+		group = item;
+	}
+	self.selectedItemForEdit = group;
+*/
+	[panel setColor:selectedItemForEdit.color];
 
 	[panel setDelegate:self];
 	[panel setTarget:self];
@@ -100,12 +123,22 @@
 	
 }
 
-#pragma mark Color Panel Delegates
+#pragma mark -
+#pragma mark FontPanel Delegates
 
-- (void) changeColor:(id)sender {
-	self.selectedItemForColorEdit.color = [sender color];
+-(void)changeFont:(id)sender {
+    NSFont *oldFont = [fontManager selectedFont];
+    NSFont *newFont = [fontManager convertFont:oldFont];       
+    self.selectedItemForEdit.font = newFont;
 }
 
+#pragma mark ColorPanel Delegates
+
+- (void) changeColor:(id)sender {
+	self.selectedItemForEdit.color = [sender color];
+}
+
+#pragma mark -
 #pragma mark Notifications
 
 - (void)managedObjectsDidChangeNotification:(NSNotification*)notification {
@@ -149,14 +182,14 @@
 	[tagCloudView clearCloud];
 	for (Tag *dataSet in tags) {
 		NSString *text = dataSet.text;
-		NSInteger size = [dataSet.ratio integerValue];
-		NSFont *font = [NSFont systemFontOfSize:size];
-		CGRect textFrame = [tagCloudView calculatePositionForString:text withFont:font];
-		[tagCloudView createLabelWithText:text
-									 font:font
+		CGRect textFrame = [tagCloudView calculatePositionForString:text withFont:dataSet.font];
+
+        [tagCloudView createLabelWithText:text
+									 font:dataSet.font
 									color:dataSet.color
 									frame:textFrame];
-	}
+    }
+         
 }
 
 #pragma mark Outline View Data Source
@@ -176,8 +209,8 @@
 	if (item==nil) {
 		result = @"/";
 	} else {
-		result = [item valueForKey:[tableColumn identifier]];
-	}
+        result = [item valueForKey:[tableColumn identifier]];
+    }
 	return result;
 }
 
@@ -196,18 +229,22 @@
 }
 
 - (void) outlineView:(NSOutlineView *)outlineView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn byItem:(id)item {
-	[item setValue:object forKey:[tableColumn identifier]];
+	
+    [item setValue:object forKey:[tableColumn identifier]];
+    
 }
 
 - (void) outlineViewSelectionDidChange:(NSNotification *)notification {
 	NSInteger selection = [tagTree selectedRow];
 	Tag *tag;
+	TagGroup *group;                        //+
 	if (selection>=0) {
 		id item = [tagTree itemAtRow:selection];
 		if ([item class]==[Tag class]) {
 			tag = item;
 			[sizeSlider setIntegerValue: [tag.ratio integerValue]];
 			[sizeTextField setIntegerValue:[tag.ratio integerValue]];
+            group = [item group];
 		} else {
 			NSInteger i = -1;
 			for (tag in [item tags]) {
@@ -225,8 +262,22 @@
 			} else {
 				[sizeTextField setStringValue:@"--"];
 			}
+            
+            group = item;                       //+
 		}
+        self.selectedItemForEdit = group;       //+        
+    }
+    
+/*
+	id item = [tagTree itemAtRow:selection]; //+
+	TagGroup *group;                        //+
+	if ([item class]==[Tag class]) {        //+
+		group = [item group];               //+
+	} else {                                //+
+		group = item;                       //+
 	}
+	self.selectedItemForEdit = group;       //+
+ */
 }
 
 #pragma mark Manual Properties
@@ -346,6 +397,8 @@
 - (void)dealloc {
 	[tagGroups release];
 	[selectedItemForColorEdit release];
+    [selectedItemForFontEdit release];
+    [selectedItemForEdit release];
 	
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	
@@ -360,8 +413,20 @@
 
 - (void)windowControllerDidLoadNib:(NSWindowController *)aController {
 	[super windowControllerDidLoadNib:aController];
-	// Add any code here that needs to be executed once the windowController has loaded the document's window.
-	NSInteger index = [tagTree columnWithIdentifier:OutlineViewColorColumnName];
+    // Add any code here that needs to be executed once the windowController has loaded the document's window.
+	
+    
+    // sharedFontManager holen denn zuerst muss dem ein Font genannt werden, damit er überhaupt was zurück gibt .... WEIRD!!!!!
+    fontManager = [NSFontManager sharedFontManager];
+    
+    [fontManager setAction:@selector(changeFont:)];     // ist eigentlich obsolet, da changeFont voreingestellt
+    [fontManager setDelegate:self];
+    NSFont *font = [NSFont fontWithName:[[NSFont systemFontOfSize:15.0f] fontName] size:16.0f]; // hack
+    [fontManager setSelectedFont:font isMultiple:NO];
+  //  NSMenu *fontMenu = [fontManager fontMenu:YES];
+    // -----
+    
+    NSInteger index = [tagTree columnWithIdentifier:OutlineViewColorColumnName];
 	ColorCell *cell = [[[tagTree tableColumns] objectAtIndex:index] dataCell];
 	[cell setAction:@selector(pushColor:)];
 	[cell setTarget:self];
