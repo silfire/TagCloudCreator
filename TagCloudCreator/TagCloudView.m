@@ -28,15 +28,17 @@
 	// Remove old subviews
 	NSArray *views = [NSArray arrayWithArray:[cloudView subviews]];
 	for (NSView *view in views) [view removeFromSuperview];
-	[cloudView setFrame:NSMakeRect(0, 0, [self frame].size.width, [self frame].size.height)];
+	[cloudView setFrame:[self bounds]];
+	[cloudView setNeedsDisplay:YES];
 	srand(42);
 	[tagCache removeAllObjects];
 }
 
 - (void)recalculateAllTags {
-	NSSize oldSize = [cloudView frame].size;
-	[cloudView setFrame:NSMakeRect(0, 0, [self frame].size.width, [self frame].size.height)];
-	NSSize newSize = [cloudView frame].size;
+	NSSize oldSize = [cloudView bounds].size;
+	[cloudView setFrame:[self bounds]];
+	[cloudView setNeedsDisplay:YES];
+	NSSize newSize = [cloudView bounds].size;
 	NSSize delta = NSMakeSize(newSize.width-oldSize.width, newSize.height-oldSize.height);
 
 	for (NSView *tagView in tagCache) {
@@ -74,7 +76,7 @@
 				   [NSDictionary dictionaryWithObjectsAndKeys:
 					font, NSFontAttributeName, nil]];
 	size.width += 4;
-	CGRect superFrame = NSRectToCGRect([cloudView frame]);
+	CGRect superFrame = NSRectToCGRect([cloudView bounds]);
 	CGFloat centerX = superFrame.size.width / 2.0f;
 	CGFloat centerY = superFrame.size.height / 2.0f;
 	CGRect textFrame;
@@ -106,16 +108,22 @@
 #pragma mark Drawing
 - (void)drawRect:(NSRect)dirtyRect {
     // Drawing code here.
+	[self recalculateAllTags];
+
+	[NSGraphicsContext saveGraphicsState];
 	[[NSColor whiteColor] set];
     [NSBezierPath fillRect:dirtyRect];
 	[[NSColor shadowColor] set];
 	[NSBezierPath strokeRect:dirtyRect];
+	[NSGraphicsContext restoreGraphicsState];
 }
 - (BOOL) needsDisplay {
 	BOOL result = [super needsDisplay];
+/*
 	if (result) {
 		[self recalculateAllTags];
 	}
+*/
 	return result;
 }
 

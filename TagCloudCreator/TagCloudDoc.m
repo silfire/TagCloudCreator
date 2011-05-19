@@ -192,6 +192,30 @@
          
 }
 
+
+// Lightweight Versioning of Models
+- (BOOL)configurePersistentStoreCoordinatorForURL:(NSURL *)url
+										   ofType:(NSString *)fileType
+							   modelConfiguration:(NSString *)configuration
+									 storeOptions:(NSDictionary *)storeOptions
+											error:(NSError **)error {
+	NSMutableDictionary *extendedOptions;
+	if (storeOptions) {
+		extendedOptions = [[storeOptions mutableCopy] autorelease];
+	} else {
+		extendedOptions = [NSMutableDictionary dictionaryWithCapacity:2];
+	}
+	[extendedOptions setObject:[NSNumber numberWithBool:YES] forKey:NSMigratePersistentStoresAutomaticallyOption];
+	[extendedOptions setObject:[NSNumber numberWithBool:YES] forKey:NSInferMappingModelAutomaticallyOption];
+
+	return [super configurePersistentStoreCoordinatorForURL:url
+													 ofType:fileType
+										 modelConfiguration:configuration
+											   storeOptions:extendedOptions
+													  error:error];
+}
+
+
 #pragma mark Outline View Data Source
 
 - (id) outlineView:(NSOutlineView *)outlineView child:(NSInteger)index ofItem:(id)item {
@@ -345,7 +369,7 @@
 	NSArray *tags = self.tags;
 	for (Tag *dataSet in tags) {
 		NSString *text = dataSet.text;
-		NSInteger size = [dataSet.ratio integerValue]*20;
+		NSInteger size = [dataSet.ratio integerValue];
 		NSFont *font = [NSFont systemFontOfSize:size];
 		CGRect textFrame = [viewToPrint calculatePositionForString:text withFont:font];
 		[viewToPrint createLabelWithText:text

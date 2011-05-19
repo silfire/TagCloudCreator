@@ -93,6 +93,7 @@
 		1E02BDD2137B1448005E1B35 /* TagCloudView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagCloudView.m; sourceTree = "<group>"; };
 		1E02BDE1137B2648005E1B35 /* NSArray-Shuffle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray-Shuffle.h"; sourceTree = "<group>"; };
 		1E02BDE2137B2648005E1B35 /* NSArray-Shuffle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray-Shuffle.m"; sourceTree = "<group>"; };
+		1E6D4C4113844CFD00F4E087 /* TagCloudDoc 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "TagCloudDoc 2.xcdatamodel"; sourceTree = "<group>"; };
 		1E8C6BD5137B2C1C00849D36 /* Tag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tag.h; sourceTree = "<group>"; };
 		1E8C6BD6137B2C1C00849D36 /* Tag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tag.m; sourceTree = "<group>"; };
 		1E8C6BDB137B2C3900849D36 /* TagGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagGroup.h; sourceTree = "<group>"; };
@@ -710,9 +711,10 @@
 		1E02BD88137B12B7005E1B35 /* TagCloudDoc.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				1E6D4C4113844CFD00F4E087 /* TagCloudDoc 2.xcdatamodel */,
 				1E02BD89137B12B7005E1B35 /* TagCloudDoc.xcdatamodel */,
 			);
-			currentVersion = 1E02BD89137B12B7005E1B35 /* TagCloudDoc.xcdatamodel */;
+			currentVersion = 1E6D4C4113844CFD00F4E087 /* TagCloudDoc 2.xcdatamodel */;
 			path = TagCloudDoc.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
