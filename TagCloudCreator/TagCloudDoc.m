@@ -21,23 +21,28 @@
 
 @interface TagCloudDoc ()
 @property (readwrite, retain) NSArray *tagGroups;
-@property (retain) 	TagGroup *selectedItemForColorEdit;
-@property (retain) 	TagGroup *selectedItemForFontEdit;
 @property (retain) 	TagGroup *selectedItemForEdit;
 @end
 
 @implementation TagCloudDoc
-@synthesize selectedItemForColorEdit, selectedItemForFontEdit, selectedItemForEdit;
+@synthesize selectedItemForEdit; 
 @synthesize fontManager;
+
+#pragma mark -
+#pragma mark Private Methods
+
+-(void)updateFontPanel{
+    [fontManager setSelectedFont:selectedItemForEdit.font isMultiple:NO];
+}
 
 #pragma mark Actions
 
 - (IBAction)pushShuffle:(id)sender {
-	[self drawCloudWithTags: [self shuffleAllTags]];
+	[self drawCloudWithTags:[self shuffleAllTags] toView:tagCloudView];
 }
 
 - (IBAction)pushRedraw:(id)sender {
-	[self drawCloudWithTags: self.tags];
+	[self drawCloudWithTags:self.tags toView:tagCloudView];
 }
 
 - (IBAction)pushAddGroup:(id)sender {
@@ -78,44 +83,20 @@
 				tag.ratio = [NSNumber numberWithInteger: [sizeSlider integerValue]];
 			}
 		}
-		[self drawCloudWithTags:self.tags];
+		[self drawCloudWithTags:self.tags toView:tagCloudView];
 	}
 	[sizeTextField setIntegerValue:[sizeSlider integerValue]];
 }
 
-
 - (IBAction)pushFont:(id)sender {
- /* 
-    NSInteger selection = [tagTree selectedRow];
-	id item = [tagTree itemAtRow:selection];
-	TagGroup *group;
-	if ([item class]==[Tag class]) {
-		group = [item group];
-	} else {
-		group = item;
-	}
-	self.selectedItemForEdit = group;
-*/
-	[fontManager setSelectedFont:selectedItemForEdit.font isMultiple:NO];
+	[self updateFontPanel];
     [fontManager orderFrontFontPanel:self];
 }
 
 - (void)pushColor:(id)sender {
 	NSColorPanel *panel = [NSColorPanel sharedColorPanel];
 
-/*
-    NSInteger selection = [tagTree selectedRow];
-	id item = [tagTree itemAtRow:selection];
-	TagGroup *group;
-	if ([item class]==[Tag class]) {
-		group = [item group];
-	} else {
-		group = item;
-	}
-	self.selectedItemForEdit = group;
-*/
 	[panel setColor:selectedItemForEdit.color];
-
 	[panel setDelegate:self];
 	[panel setTarget:self];
 	[panel setAction:@selector(changeColor:)];
@@ -139,18 +120,6 @@
 }
 
 #pragma mark -
-#pragma mark Notifications
-
-- (void)managedObjectsDidChangeNotification:(NSNotification*)notification {
-	NSDictionary *userInfo = [notification userInfo];
-	if (([[userInfo objectForKey:NSInsertedObjectsKey] count]>0) ||
-		([[userInfo objectForKey:NSDeletedObjectsKey] count]>0)) {
-		self.tagGroups = nil;
-	}
-	[tagTree reloadData];
-	[self drawCloudWithTags:self.tags];
-}
-
 #pragma mark Manage Objects
 - (TagGroup*)addTagGroup {
 	NSManagedObjectModel *managedObjectModel = [self managedObjectModel];
@@ -178,20 +147,18 @@
 	return shuffledArray;
 }
 
-- (void)drawCloudWithTags:(NSArray*)tags {
-	[tagCloudView clearCloud];
+-(void)drawCloudWithTags:(NSArray *)tags toView:(TagCloudView*)view {
+    [view clearCloud];
 	for (Tag *dataSet in tags) {
 		NSString *text = dataSet.text;
-		CGRect textFrame = [tagCloudView calculatePositionForString:text withFont:dataSet.font];
-
-        [tagCloudView createLabelWithText:text
-									 font:dataSet.font
-									color:dataSet.color
-									frame:textFrame];
+		CGRect textFrame = [view calculatePositionForString:text withFont:dataSet.font];
+        
+        [view createLabelWithText:text
+                             font:dataSet.font
+                            color:dataSet.color
+                            frame:textFrame];
     }
-         
 }
-
 
 // Lightweight Versioning of Models
 - (BOOL)configurePersistentStoreCoordinatorForURL:(NSURL *)url
@@ -215,7 +182,58 @@
 													  error:error];
 }
 
+#pragma mark Notifications
 
+- (void)managedObjectsDidChangeNotification:(NSNotification*)notification {
+	NSDictionary *userInfo = [notification userInfo];
+	if (([[userInfo objectForKey:NSInsertedObjectsKey] count]>0) ||
+		([[userInfo objectForKey:NSDeletedObjectsKey] count]>0)) {
+		self.tagGroups = nil;
+	}
+	[tagTree reloadData];
+	[self drawCloudWithTags:self.tags toView:tagCloudView];
+}
+
+#pragma mark Manual Properties
+- (NSArray*)tagGroups {
+	if (tagGroups == nil) {
+		NSFetchRequest *request = [[NSFetchRequest alloc] init];
+		NSEntityDescription *entity = [[[self managedObjectModel] entitiesByName] objectForKey:TagGroupEntityKey];
+		[request setEntity:entity];
+		
+		NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:TagPropertyTextKey
+																		 ascending:YES];
+		[request setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
+		
+		NSError *error;
+		self.tagGroups = [self.managedObjectContext executeFetchRequest:request error:&error];
+		[request release];
+	}
+	return tagGroups;
+}
+
+- (void)setTagGroups:(NSArray *)array {
+	[tagGroups release];
+	tagGroups = array;
+	[array retain];
+}
+- (NSArray*)tags {
+	NSArray* tags = nil;
+	NSFetchRequest *request = [[NSFetchRequest alloc] init];
+	NSEntityDescription *entity = [[[self managedObjectModel] entitiesByName] objectForKey:TagEntityKey];
+	[request setEntity:entity];
+    
+	NSSortDescriptor *sortDescriptor1 = [NSSortDescriptor sortDescriptorWithKey:TagPropertySortIndexKey ascending:YES];
+	NSSortDescriptor *sortDescriptor2 = [NSSortDescriptor sortDescriptorWithKey:TagPropertyTextKey ascending:YES];
+	[request setSortDescriptors:[NSArray arrayWithObjects:sortDescriptor1, sortDescriptor2, nil]];
+    
+	NSError *error;
+	tags = [self.managedObjectContext executeFetchRequest:request error:&error];
+	[request release];
+	return tags;
+}
+
+#pragma mark -
 #pragma mark Outline View Data Source
 
 - (id) outlineView:(NSOutlineView *)outlineView child:(NSInteger)index ofItem:(id)item {
@@ -253,15 +271,13 @@
 }
 
 - (void) outlineView:(NSOutlineView *)outlineView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn byItem:(id)item {
-	
     [item setValue:object forKey:[tableColumn identifier]];
-    
 }
 
 - (void) outlineViewSelectionDidChange:(NSNotification *)notification {
 	NSInteger selection = [tagTree selectedRow];
 	Tag *tag;
-	TagGroup *group;                        //+
+	TagGroup *group;                       
 	if (selection>=0) {
 		id item = [tagTree itemAtRow:selection];
 		if ([item class]==[Tag class]) {
@@ -287,62 +303,15 @@
 				[sizeTextField setStringValue:@"--"];
 			}
             
-            group = item;                       //+
+            group = item;                       
 		}
-        self.selectedItemForEdit = group;       //+        
+        self.selectedItemForEdit = group;             
+        [self updateFontPanel];
     }
-    
-/*
-	id item = [tagTree itemAtRow:selection]; //+
-	TagGroup *group;                        //+
-	if ([item class]==[Tag class]) {        //+
-		group = [item group];               //+
-	} else {                                //+
-		group = item;                       //+
-	}
-	self.selectedItemForEdit = group;       //+
- */
 }
 
-#pragma mark Manual Properties
-- (NSArray*)tagGroups {
-	if (tagGroups == nil) {
-		NSFetchRequest *request = [[NSFetchRequest alloc] init];
-		NSEntityDescription *entity = [[[self managedObjectModel] entitiesByName] objectForKey:TagGroupEntityKey];
-		[request setEntity:entity];
-		
-		NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:TagPropertyTextKey
-																		 ascending:YES];
-		[request setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
-		
-		NSError *error;
-		self.tagGroups = [self.managedObjectContext executeFetchRequest:request error:&error];
-		[request release];
-	}
-	return tagGroups;
-}
 
-- (void)setTagGroups:(NSArray *)array {
-	[tagGroups release];
-	tagGroups = array;
-	[array retain];
-}
-- (NSArray*)tags {
-	NSArray* tags = nil;
-	NSFetchRequest *request = [[NSFetchRequest alloc] init];
-	NSEntityDescription *entity = [[[self managedObjectModel] entitiesByName] objectForKey:TagEntityKey];
-	[request setEntity:entity];
-
-	NSSortDescriptor *sortDescriptor1 = [NSSortDescriptor sortDescriptorWithKey:TagPropertySortIndexKey ascending:YES];
-	NSSortDescriptor *sortDescriptor2 = [NSSortDescriptor sortDescriptorWithKey:TagPropertyTextKey ascending:YES];
-	[request setSortDescriptors:[NSArray arrayWithObjects:sortDescriptor1, sortDescriptor2, nil]];
-
-	NSError *error;
-	tags = [self.managedObjectContext executeFetchRequest:request error:&error];
-	[request release];
-	return tags;
-}
-
+#pragma mark -
 #pragma mark Printing
 
 - (NSRect)coordinatesOfPrintArea {
@@ -362,34 +331,17 @@
 	return NSMakeRect(0, 0, coordinateRight-coordinateLeft+5.0f, coordinateTop-coordinateBottom+5.0f); // 5 = 1 für 0 als Koordinate und 2+2 für Rand links und Rechts um View
 }
 
--(TagCloudView *)createPrintView:(NSRect)rectToPrint {
-
-    TagCloudView *viewToPrint = [[[TagCloudView alloc] initWithFrame:rectToPrint] autorelease];
-	[viewToPrint clearCloud];
-	NSArray *tags = self.tags;
-	for (Tag *dataSet in tags) {
-		NSString *text = dataSet.text;
-		NSInteger size = [dataSet.ratio integerValue];
-		NSFont *font = [NSFont systemFontOfSize:size];
-		CGRect textFrame = [viewToPrint calculatePositionForString:text withFont:font];
-		[viewToPrint createLabelWithText:text
-									font:font
-								   color:dataSet.color
-								   frame:textFrame];
-	}
-    return viewToPrint;
-}
-
 - (BOOL)shouldChangePrintInfo:(NSPrintInfo *)newPrintInfo {
 	return YES;
 }
 
 - (NSPrintOperation *)printOperationWithSettings:(NSDictionary *)printSettings error:(NSError **)outError {
     NSRect rectToPrint = [self coordinatesOfPrintArea];
-    TagCloudView *viewToPrint = [self createPrintView:rectToPrint];
+    TagCloudView *viewToPrint = [[[TagCloudView alloc] initWithFrame:rectToPrint] autorelease];
+    [self drawCloudWithTags:self.tags toView:viewToPrint];
     
     NSPrintInfo *printInfo = [self printInfo];
-
+    
 	NSSize viewSize = [viewToPrint frame].size;
 	NSSize canvasSize = [printInfo paperSize];
 	canvasSize.width -= [printInfo leftMargin] + [printInfo rightMargin];
@@ -402,8 +354,10 @@
 	frame.size.height *= scaleFactor;
 	[viewToPrint setFrame:frame];
 	[viewToPrint.cloudView setFrame:frame];
-
-	return [NSPrintOperation printOperationWithView:viewToPrint printInfo:printInfo];
+ 
+    NSPrintOperation *printOperation = [NSPrintOperation printOperationWithView:viewToPrint printInfo:printInfo];
+    [printOperation setJobTitle:[self displayName]];
+    return printOperation;
 }
 
 #pragma mark -
@@ -420,8 +374,6 @@
 
 - (void)dealloc {
 	[tagGroups release];
-	[selectedItemForColorEdit release];
-    [selectedItemForFontEdit release];
     [selectedItemForEdit release];
 	
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -440,14 +392,10 @@
     // Add any code here that needs to be executed once the windowController has loaded the document's window.
 	
     
-    // sharedFontManager holen denn zuerst muss dem ein Font genannt werden, damit er überhaupt was zurück gibt .... WEIRD!!!!!
+    // sharedFontManager holen denn zuerst muss dem ein Font uebergeben werden, damit er ueberhaupt was zurueck gibt .... WEIRD!!!!!
     fontManager = [NSFontManager sharedFontManager];
-    
-    [fontManager setAction:@selector(changeFont:)];     // ist eigentlich obsolet, da changeFont voreingestellt
     [fontManager setDelegate:self];
-    NSFont *font = [NSFont fontWithName:[[NSFont systemFontOfSize:15.0f] fontName] size:16.0f]; // hack
-    [fontManager setSelectedFont:font isMultiple:NO];
-  //  NSMenu *fontMenu = [fontManager fontMenu:YES];
+    [fontManager setSelectedFont:[NSFont systemFontOfSize:16.0f] isMultiple:NO];
     // -----
     
     NSInteger index = [tagTree columnWithIdentifier:OutlineViewColorColumnName];
@@ -459,7 +407,7 @@
 											 selector: @selector(managedObjectsDidChangeNotification:)
 												 name: NSManagedObjectContextObjectsDidChangeNotification
 											   object: [self managedObjectContext]];
-	[self drawCloudWithTags: self.tags];
+	[self drawCloudWithTags:self.tags toView:tagCloudView];
 }
 
 @end

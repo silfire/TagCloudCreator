@@ -16,8 +16,6 @@
 	IBOutlet TagCloudView *tagCloudView;
 	IBOutlet NSSlider *sizeSlider;
 	IBOutlet NSTextField *sizeTextField;
-	TagGroup *selectedItemForColorEdit;
-    TagGroup *selectedItemForFontEdit;
     TagGroup *selectedItemForEdit;
 	NSArray *tagGroups;
     NSFontManager *fontManager;
@@ -29,7 +27,7 @@
 - (TagGroup*)addTagGroup;
 - (Tag*)addTagToGroup:(TagGroup*)tagGroup;
 - (NSArray*)shuffleAllTags;
-- (void)drawCloudWithTags:(NSArray*)tags;
+- (void)drawCloudWithTags:(NSArray*)tags toView:(TagCloudView*)view;
 
 - (IBAction)pushShuffle:(id)sender;
 - (IBAction)pushRedraw:(id)sender;
