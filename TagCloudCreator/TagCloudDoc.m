@@ -71,23 +71,6 @@
 	}
 }
 
-- (IBAction)pushSlider:(id)sender {
-	NSInteger selection = [tagTree selectedRow];
-	if (selection>=0) {
-		id item = [tagTree itemAtRow:selection];
-		if ([item class]==[Tag class]) {
-			Tag *tag = item;
-			tag.ratio = [NSNumber numberWithInteger: [sizeSlider integerValue]];
-		} else {
-			for (Tag *tag in [item tags]) {
-				tag.ratio = [NSNumber numberWithInteger: [sizeSlider integerValue]];
-			}
-		}
-		[self drawCloudWithTags:self.tags toView:tagCloudView];
-	}
-	[sizeTextField setIntegerValue:[sizeSlider integerValue]];
-}
-
 - (IBAction)pushFont:(id)sender {
 	[self updateFontPanel];
     [fontManager orderFrontFontPanel:self];
@@ -282,8 +265,6 @@
 		id item = [tagTree itemAtRow:selection];
 		if ([item class]==[Tag class]) {
 			tag = item;
-			[sizeSlider setIntegerValue: [tag.ratio integerValue]];
-			[sizeTextField setIntegerValue:[tag.ratio integerValue]];
             group = [item group];
 		} else {
 			NSInteger i = -1;
@@ -297,10 +278,6 @@
 			}
 			if (i>=0) {
 				tag = [[(TagGroup*)item tags] anyObject];
-				[sizeSlider setIntegerValue: [tag.ratio integerValue]];
-				[sizeTextField setIntegerValue:[tag.ratio integerValue]];
-			} else {
-				[sizeTextField setStringValue:@"--"];
 			}
             
             group = item;                       
