@@ -66,7 +66,6 @@
 							<string key="NSFrame">{{225, 20}, {433, 428}}</string>
 							<reference key="NSSuperview" ref="568628114"/>
 							<reference key="NSWindow"/>
-							<reference key="NSNextKeyView"/>
 							<string key="NSClassName">TagCloudView</string>
 						</object>
 						<object class="NSButton" id="254173220">
@@ -111,7 +110,7 @@
 											<string key="NSFrameSize">{195, 380}</string>
 											<reference key="NSSuperview" ref="101445362"/>
 											<reference key="NSWindow"/>
-											<reference key="NSNextKeyView" ref="183256747"/>
+											<reference key="NSNextKeyView" ref="925456176"/>
 											<bool key="NSEnabled">YES</bool>
 											<object class="NSTableHeaderView" key="NSHeaderView" id="870371295">
 												<reference key="NSNextResponder" ref="925456176"/>
@@ -229,7 +228,7 @@
 												</object>
 											</object>
 											<double key="NSRowHeight">17</double>
-											<int key="NSTvFlags">-1841299456</int>
+											<int key="NSTvFlags">-1707081728</int>
 											<reference key="NSDelegate"/>
 											<reference key="NSDataSource"/>
 											<string key="NSAutosaveName">TagCloudTree</string>
@@ -238,7 +237,6 @@
 											<int key="NSDraggingSourceMaskForNonLocal">0</int>
 											<bool key="NSAllowsTypeSelect">YES</bool>
 											<int key="NSTableViewDraggingDestinationStyle">0</int>
-											<bool key="NSOutlineViewAutosaveExpandedItemsKey">YES</bool>
 										</object>
 									</object>
 									<string key="NSFrame">{{1, 17}, {195, 380}}</string>
@@ -292,7 +290,7 @@
 							<string key="NSFrame">{{20, 50}, {197, 398}}</string>
 							<reference key="NSSuperview" ref="568628114"/>
 							<reference key="NSWindow"/>
-							<reference key="NSNextKeyView" ref="925456176"/>
+							<reference key="NSNextKeyView" ref="101445362"/>
 							<int key="NSsFlags">562</int>
 							<reference key="NSVScroller" ref="183256747"/>
 							<reference key="NSHScroller" ref="1020163048"/>
@@ -888,14 +886,12 @@
 							<string>pushRedraw:</string>
 							<string>pushRemoveItem:</string>
 							<string>pushShuffle:</string>
-							<string>pushSlider:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>id</string>
 							<string>id</string>
 							<string>NSButton</string>
-							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -911,7 +907,6 @@
 							<string>pushRedraw:</string>
 							<string>pushRemoveItem:</string>
 							<string>pushShuffle:</string>
-							<string>pushSlider:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
@@ -939,25 +934,17 @@
 								<string key="name">pushShuffle:</string>
 								<string key="candidateClassName">id</string>
 							</object>
-							<object class="IBActionInfo">
-								<string key="name">pushSlider:</string>
-								<string key="candidateClassName">id</string>
-							</object>
 						</object>
 					</object>
 					<object class="NSMutableDictionary" key="outlets">
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>sizeSlider</string>
-							<string>sizeTextField</string>
 							<string>tagCloudView</string>
 							<string>tagTree</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>NSSlider</string>
-							<string>NSTextField</string>
 							<string>TagCloudView</string>
 							<string>NSOutlineView</string>
 						</object>
@@ -966,21 +953,11 @@
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>sizeSlider</string>
-							<string>sizeTextField</string>
 							<string>tagCloudView</string>
 							<string>tagTree</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<object class="IBToOneOutletInfo">
-								<string key="name">sizeSlider</string>
-								<string key="candidateClassName">NSSlider</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">sizeTextField</string>
-								<string key="candidateClassName">NSTextField</string>
-							</object>
 							<object class="IBToOneOutletInfo">
 								<string key="name">tagCloudView</string>
 								<string key="candidateClassName">TagCloudView</string>

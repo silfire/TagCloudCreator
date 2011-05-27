@@ -17,10 +17,13 @@
     TagGroup *selectedItemForEdit;
 	NSArray *tagGroups;
     NSFontManager *fontManager;
+    
+    NSArray *draggedItems;
 }
 @property (readonly, retain) NSArray *tagGroups;
 @property (readonly, retain) NSArray *tags;
 @property (assign) NSFontManager *fontManager;
+@property (retain) NSArray *draggedItems;
 
 - (TagGroup*)addTagGroup;
 - (Tag*)addTagToGroup:(TagGroup*)tagGroup;

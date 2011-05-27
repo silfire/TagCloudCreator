@@ -19,6 +19,8 @@
 #define OutlineViewColorColumnName @"color"
 #define OutlineViewTextColumnName @"text"
 
+#define TagTreeDatatype @"de.silutions.TagCloudCreator.TagTreeDatatype"
+
 @interface TagCloudDoc ()
 @property (readwrite, retain) NSArray *tagGroups;
 @property (retain) 	TagGroup *selectedItemForEdit;
@@ -27,6 +29,7 @@
 @implementation TagCloudDoc
 @synthesize selectedItemForEdit; 
 @synthesize fontManager;
+@synthesize draggedItems;
 
 #pragma mark -
 #pragma mark Private Methods
@@ -126,6 +129,7 @@
 	NSUInteger i = 0;
 	for (Tag *tag in shuffledArray) {
 		tag.sortIndex = [NSNumber numberWithUnsignedInteger:i++];
+        NSLog(@"%@ %lu", tag.text, i);
 	}
 	return shuffledArray;
 }
@@ -200,6 +204,7 @@
 	tagGroups = array;
 	[array retain];
 }
+
 - (NSArray*)tags {
 	NSArray* tags = nil;
 	NSFetchRequest *request = [[NSFetchRequest alloc] init];
@@ -230,7 +235,7 @@
 	return result;
 }
 - (id) outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item {
-	id result = nil;
+    id result = nil;
 	if (item==nil) {
 		result = @"/";
 	} else {
@@ -259,27 +264,12 @@
 
 - (void) outlineViewSelectionDidChange:(NSNotification *)notification {
 	NSInteger selection = [tagTree selectedRow];
-	Tag *tag;
 	TagGroup *group;                       
 	if (selection>=0) {
 		id item = [tagTree itemAtRow:selection];
 		if ([item class]==[Tag class]) {
-			tag = item;
             group = [item group];
-		} else {
-			NSInteger i = -1;
-			for (tag in [item tags]) {
-				if (i>=0 && [tag.ratio integerValue]!=i) {
-					i=-1;
-					break;
-				} else {
-					i = [tag.ratio integerValue];
-				}
-			}
-			if (i>=0) {
-				tag = [[(TagGroup*)item tags] anyObject];
-			}
-            
+		} else if ([item class]==[TagGroup class]) {		
             group = item;                       
 		}
         self.selectedItemForEdit = group;             
@@ -287,6 +277,129 @@
     }
 }
 
+#pragma mark -
+#pragma mark Drag and Drop
+
+- (BOOL)outlineView:(NSOutlineView *)outlineView 
+         writeItems:(NSArray *)items 
+       toPasteboard:(NSPasteboard *)pboard { 
+    draggedItems = items;
+   
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:items];
+    [pboard declareTypes:[NSArray arrayWithObject:TagTreeDatatype] owner:self];
+    [pboard setData:data forType:TagTreeDatatype];
+   
+    return YES;
+}
+
+-(NSDragOperation)outlineView:(NSOutlineView *)outlineView 
+                 validateDrop:(id<NSDraggingInfo>)info 
+                 proposedItem:(id)item 
+           proposedChildIndex:(NSInteger)index {
+    
+   
+    NSDragOperation result = NSDragOperationMove;
+//    NSDragOperation op = [info draggingSourceOperationMask];
+//    if (op == NSTableViewDropAbove) {result = NSDragOperationMove;} 
+//   NSLog(@"validateDrop - Drop result: %lu; Drop oper: %lu",result, op);
+    return result;
+}
+
+-(BOOL)outlineView:(NSOutlineView*)outlineView 
+        acceptDrop:(id<NSDraggingInfo>)info 
+              item:(id)item 
+        childIndex:(NSInteger)index {
+    
+    // item = TagGroup
+    // index = Stelle, an die gedroppt wurde
+    // draggedItems enthŠlt die gedraggten Items
+  
+    for (Tag* tag in draggedItems) {
+        tag.group = item;
+    }
+    
+    /*         
+    NSPasteboard *pboard = [info draggingPasteboard];
+      
+    NSData *data = [pboard dataForType:TagTreeDatatype];
+    
+    NSIndexSet *rowIndexes = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+    NSLog(@"rowIndexes count: %lu", [rowIndexes count]);
+    */
+    
+    /* 
+     NSInteger aboveInsertIndexCount = 0;
+     NSInteger removeIndex = 0;
+     NSInteger dragRow = [rowIndexes lastIndex];
+     
+     while (dragRow != NSNotFound) {
+     if (dragRow >= index) {
+        removeIndex = dragRow + aboveInsertIndexCount;
+        aboveInsertIndexCount++;
+     } else {
+        removeIndex = dragRow;
+        index--;
+     }
+     
+         dragRow = [rowIndexes indexLessThanIndex:dragRow];
+     }
+     
+     item = [tagTree itemAtRow:removeIndex];
+     [item retain];
+     [[self managedObjectContext] deleteObject:item];
+     */
+     
+
+    return YES;
+}
+
+
+
+
+
+
+-(id)outlineView:(NSOutlineView *)outlineView persistentObjectForItem:(id)item {
+    return item;
+}
+
+
+
+
+/*
+-(BOOL)tableView:(NSTableView *)tableView 
+      acceptDrop:(id<NSDraggingInfo>)info 
+             row:(NSInteger)row 
+   dropOperation:(NSTableViewDropOperation)dropOperation {
+
+    NSPasteboard *pboard = [info draggingPasteboard];
+    NSData *data = [pboard dataForType:TagTreeDatatype];
+    NSIndexSet *rowIndexes = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+    
+    NSInteger aboveInsertIndexCount = 0;
+    NSInteger removeIndex = 0;
+    NSInteger dragRow = [rowIndexes lastIndex];
+    
+    while (dragRow != NSNotFound) {
+        if (dragRow >= row) {
+            removeIndex = dragRow + aboveInsertIndexCount;
+            aboveInsertIndexCount++;
+        } else {
+            removeIndex = dragRow;
+            row--;
+        }
+        dragRow = [rowIndexes indexLessThanIndex:dragRow];
+    }
+    
+    id item = [tagTree itemAtRow:removeIndex];
+    [item retain];
+    [[self managedObjectContext] deleteObject:item];
+
+    
+    
+    return YES;
+     }
+
+*/
 
 #pragma mark -
 #pragma mark Printing
@@ -352,6 +465,7 @@
 - (void)dealloc {
 	[tagGroups release];
     [selectedItemForEdit release];
+    [draggedItems release];
 	
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	
@@ -368,6 +482,8 @@
 	[super windowControllerDidLoadNib:aController];
     // Add any code here that needs to be executed once the windowController has loaded the document's window.
 	
+    //Drag'n'Drop
+    [tagTree registerForDraggedTypes:[NSArray arrayWithObject:TagTreeDatatype]];
     
     // sharedFontManager holen denn zuerst muss dem ein Font uebergeben werden, damit er ueberhaupt was zurueck gibt .... WEIRD!!!!!
     fontManager = [NSFontManager sharedFontManager];
