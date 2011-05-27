@@ -1,0 +1,94 @@
+// !$*UTF8*$!
+{
+	1E02BD60137B12B7005E1B35 /* Project object */ = {
+		activeBuildConfigurationName = Debug;
+		activeExecutable = D08081D0138D646900824D1B /* TagCloudCreator */;
+		activeTarget = 1E02BD68137B12B7005E1B35 /* TagCloudCreator */;
+		codeSenseManager = D08081EF138D646C00824D1B /* Code sense */;
+		executables = (
+			D08081D0138D646900824D1B /* TagCloudCreator */,
+		);
+		perUserDictionary = {
+			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					364,
+					20,
+					48.16259765625,
+					43,
+					43,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+				);
+			};
+			PBXPerProjectTemplateStateSaveDate = 328033386;
+			PBXWorkspaceStateSaveDate = 328033386;
+		};
+		sourceControlManager = D08081EE138D646C00824D1B /* Source Control */;
+		userBuildSettings = {
+		};
+	};
+	1E02BD68137B12B7005E1B35 /* TagCloudCreator */ = {
+		activeExec = 0;
+		executables = (
+			D08081D0138D646900824D1B /* TagCloudCreator */,
+		);
+	};
+	1E02BD8F137B12B8005E1B35 /* TagCloudCreatorTests */ = {
+		activeExec = 0;
+	};
+	1E02BDA2137B12B8005E1B35 /* TagCloudCreatorImporter */ = {
+		activeExec = 0;
+	};
+	D08081D0138D646900824D1B /* TagCloudCreator */ = {
+		isa = PBXExecutable;
+		activeArgIndices = (
+		);
+		argumentStrings = (
+		);
+		autoAttachOnCrash = 1;
+		breakpointsEnabled = 0;
+		configStateDict = {
+		};
+		customDataFormattersEnabled = 1;
+		dataTipCustomDataFormattersEnabled = 1;
+		dataTipShowTypeColumn = 1;
+		dataTipSortType = 0;
+		debuggerPlugin = GDBDebugging;
+		disassemblyDisplayState = 0;
+		enableDebugStr = 1;
+		environmentEntries = (
+		);
+		executableSystemSymbolLevel = 0;
+		executableUserSymbolLevel = 0;
+		libgmallocEnabled = 0;
+		name = TagCloudCreator;
+		showTypeColumn = 0;
+		sourceDirectories = (
+		);
+	};
+	D08081EE138D646C00824D1B /* Source Control */ = {
+		isa = PBXSourceControlManager;
+		fallbackIsa = XCSourceControlManager;
+		isSCMEnabled = 0;
+		scmConfiguration = {
+			repositoryNamesForRoots = {
+				"" = "";
+			};
+		};
+	};
+	D08081EF138D646C00824D1B /* Code sense */ = {
+		isa = PBXCodeSenseManager;
+		indexTemplatePath = "";
+	};
+}
