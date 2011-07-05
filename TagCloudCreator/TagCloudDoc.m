@@ -19,6 +19,7 @@
 #define OutlineViewColorColumnName @"color"
 #define OutlineViewTextColumnName @"text"
 
+#define TagGroupTreeDatatype @"de.silutions.TagCloudCreator.TagGroupTreeDatatype"
 #define TagTreeDatatype @"de.silutions.TagCloudCreator.TagTreeDatatype"
 
 @interface TagCloudDoc ()
@@ -29,7 +30,6 @@
 @implementation TagCloudDoc
 @synthesize selectedItemForEdit; 
 @synthesize fontManager;
-@synthesize draggedItems;
 
 #pragma mark -
 #pragma mark Private Methods
@@ -121,6 +121,7 @@
 	Tag *tag = [[[Tag alloc] initWithEntity:entity
 				 insertIntoManagedObjectContext:[self managedObjectContext]] autorelease];
 	tag.group = tagGroup;
+	tag.viewSortIndex = [NSNumber numberWithUnsignedLong:[[tagGroup tags] count]];
 	return tag;
 }
 
@@ -230,7 +231,12 @@
 	if (item==nil) {
 		result = [self.tagGroups objectAtIndex:index];
 	} else if ([item class]==[TagGroup class]) {
-		result = [[[(TagGroup*)item tags] allObjects] objectAtIndex:index];
+		//result = [[[(TagGroup*)item tags] allObjects] objectAtIndex:index];
+		
+		result = [[item viewSortedTags] objectAtIndex:index];
+		//NSArray *tags = [item viewSortedTags];
+		//result = [tags objectAtIndex:index];
+		NSLog(@"Item geliefert fuer Index %ld der Gruppe %@: Tag %@", index, [item text], [result text]);
 	}
 	return result;
 }
@@ -260,6 +266,11 @@
 
 - (void) outlineView:(NSOutlineView *)outlineView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn byItem:(id)item {
     [item setValue:object forKey:[tableColumn identifier]];
+	/*
+	dispatch_async(dispatch_get_main_queue(), ^(void) {
+		[outlineView reloadData];
+	});
+	 */
 }
 
 - (void) outlineViewSelectionDidChange:(NSNotification *)notification {
@@ -283,12 +294,25 @@
 - (BOOL)outlineView:(NSOutlineView *)outlineView 
          writeItems:(NSArray *)items 
        toPasteboard:(NSPasteboard *)pboard { 
-    draggedItems = items;
-   
-    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:items];
-    [pboard declareTypes:[NSArray arrayWithObject:TagTreeDatatype] owner:self];
-    [pboard setData:data forType:TagTreeDatatype];
-   
+
+	NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
+	int groupCounter = 0;
+	int tagCounter = 0;
+	for (id item in items) {
+		NSInteger index = [outlineView rowForItem:item];
+		if (index>=0) { [indexSet addIndex:index]; }
+		if ([item isKindOfClass:[TagGroup class]]) {
+			groupCounter++;
+		} else {
+			tagCounter++;
+		}
+	}
+	if (tagCounter && groupCounter) return NO;
+	NSString *datatype = (tagCounter ? TagTreeDatatype : TagGroupTreeDatatype);
+	
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:indexSet];
+    [pboard declareTypes:[NSArray arrayWithObject:datatype] owner:self];
+    [pboard setData:data forType:datatype];
     return YES;
 }
 
@@ -296,13 +320,14 @@
                  validateDrop:(id<NSDraggingInfo>)info 
                  proposedItem:(id)item 
            proposedChildIndex:(NSInteger)index {
-    
-   
-    NSDragOperation result = NSDragOperationMove;
-//    NSDragOperation op = [info draggingSourceOperationMask];
-//    if (op == NSTableViewDropAbove) {result = NSDragOperationMove;} 
-//   NSLog(@"validateDrop - Drop result: %lu; Drop oper: %lu",result, op);
-    return result;
+	NSDragOperation result = NSDragOperationNone;
+	NSString *datatype = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:TagTreeDatatype]];
+	if (datatype) {
+		NSDragOperation op = [info draggingSourceOperationMask];
+		if (op & NSDragOperationEvery) {result = NSDragOperationMove;} 
+		// NSLog(@"validateDrop - Drop result: %lu; Drop oper: %lu",result, op);
+	}
+	return result;
 }
 
 -(BOOL)outlineView:(NSOutlineView*)outlineView 
@@ -314,91 +339,43 @@
     // index = Stelle, an die gedroppt wurde
     // draggedItems enthŠlt die gedraggten Items
   
-    for (Tag* tag in draggedItems) {
-        tag.group = item;
-    }
+//    for (Tag* tag in self.draggedItems) {
+//        tag.group = item;
+//    }
     
-    /*         
     NSPasteboard *pboard = [info draggingPasteboard];
-      
     NSData *data = [pboard dataForType:TagTreeDatatype];
-    
     NSIndexSet *rowIndexes = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-    NSLog(@"rowIndexes count: %lu", [rowIndexes count]);
-    */
     
-    /* 
-     NSInteger aboveInsertIndexCount = 0;
-     NSInteger removeIndex = 0;
-     NSInteger dragRow = [rowIndexes lastIndex];
+	TagGroup *group = nil;
+	if ([item isKindOfClass:[TagGroup class]]) {
+		group = item;
+	} else {
+		group = [item group];
+	}
+	NSArray *tags = [group viewSortedTags];
+	
+	__block NSInteger newIndex = 0;
+	for (Tag *tag in tags) {
+		if (newIndex == index) {
+			[rowIndexes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
+				Tag *tagToInsert = [outlineView itemAtRow:idx];
+				tagToInsert.group = group;
+				tagToInsert.viewSortIndex = [NSNumber numberWithInteger:newIndex];
+				newIndex++;
+			}];
+		}
+		tag.viewSortIndex = [NSNumber numberWithInteger:newIndex];
+		newIndex++;
+	}
      
-     while (dragRow != NSNotFound) {
-     if (dragRow >= index) {
-        removeIndex = dragRow + aboveInsertIndexCount;
-        aboveInsertIndexCount++;
-     } else {
-        removeIndex = dragRow;
-        index--;
-     }
-     
-         dragRow = [rowIndexes indexLessThanIndex:dragRow];
-     }
-     
-     item = [tagTree itemAtRow:removeIndex];
-     [item retain];
-     [[self managedObjectContext] deleteObject:item];
-     */
-     
-
     return YES;
 }
 
-
-
-
-
-
+/*
 -(id)outlineView:(NSOutlineView *)outlineView persistentObjectForItem:(id)item {
     return item;
 }
-
-
-
-
-/*
--(BOOL)tableView:(NSTableView *)tableView 
-      acceptDrop:(id<NSDraggingInfo>)info 
-             row:(NSInteger)row 
-   dropOperation:(NSTableViewDropOperation)dropOperation {
-
-    NSPasteboard *pboard = [info draggingPasteboard];
-    NSData *data = [pboard dataForType:TagTreeDatatype];
-    NSIndexSet *rowIndexes = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-    
-    NSInteger aboveInsertIndexCount = 0;
-    NSInteger removeIndex = 0;
-    NSInteger dragRow = [rowIndexes lastIndex];
-    
-    while (dragRow != NSNotFound) {
-        if (dragRow >= row) {
-            removeIndex = dragRow + aboveInsertIndexCount;
-            aboveInsertIndexCount++;
-        } else {
-            removeIndex = dragRow;
-            row--;
-        }
-        dragRow = [rowIndexes indexLessThanIndex:dragRow];
-    }
-    
-    id item = [tagTree itemAtRow:removeIndex];
-    [item retain];
-    [[self managedObjectContext] deleteObject:item];
-
-    
-    
-    return YES;
-     }
-
 */
 
 #pragma mark -
@@ -465,7 +442,6 @@
 - (void)dealloc {
 	[tagGroups release];
     [selectedItemForEdit release];
-    [draggedItems release];
 	
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	
