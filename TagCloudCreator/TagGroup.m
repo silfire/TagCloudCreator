@@ -14,6 +14,7 @@
 @dynamic fontData;
 @dynamic colorData;
 @dynamic text;
+
 @dynamic tags;
 
 - (void) awakeFromInsert {
@@ -67,5 +68,26 @@
     [self didChangeValueForKey:@"tags" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
 }
 
+#pragma mark NSCoding
+- (id)initWithCoder:(NSCoder *)decoder {
+	if ((self = [super init])) {
+		self.fontData	= [decoder decodeObjectForKey:@"fontData"];
+		self.colorData	= [decoder decodeObjectForKey:@"colorData"];
+		self.text = [decoder decodeObjectForKey:@"text"];
+		self.tags = [decoder decodeObjectForKey:@"tags"];
+        self.color = [decoder decodeObjectForKey:@"color"];
+        self.font = [decoder decodeObjectForKey:@"font"];
+	}
+	return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder {
+	[aCoder encodeObject:self.fontData forKey:@"fontData"];
+    [aCoder encodeObject:self.colorData forKey:@"colorData"];
+    [aCoder encodeObject:self.text forKey:@"text"];
+    [aCoder encodeObject:self.tags forKey:@"tags"];
+    [aCoder encodeObject:self.color forKey:@"color"];
+    [aCoder encodeObject:self.font forKey:@"font"];	
+}
 
 @end

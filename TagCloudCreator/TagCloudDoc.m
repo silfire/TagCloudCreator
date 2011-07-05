@@ -19,25 +19,33 @@
 #define OutlineViewColorColumnName @"color"
 #define OutlineViewTextColumnName @"text"
 
+#define TagTreeDatatype @"de.silutions.TagCloudCreator.TagTreeDatatype"
+
 @interface TagCloudDoc ()
 @property (readwrite, retain) NSArray *tagGroups;
-@property (retain) 	TagGroup *selectedItemForColorEdit;
-@property (retain) 	TagGroup *selectedItemForFontEdit;
 @property (retain) 	TagGroup *selectedItemForEdit;
 @end
 
 @implementation TagCloudDoc
-@synthesize selectedItemForColorEdit, selectedItemForFontEdit, selectedItemForEdit;
+@synthesize selectedItemForEdit; 
 @synthesize fontManager;
+@synthesize draggedItems;
+
+#pragma mark -
+#pragma mark Private Methods
+
+-(void)updateFontPanel{
+    [fontManager setSelectedFont:selectedItemForEdit.font isMultiple:NO];
+}
 
 #pragma mark Actions
 
 - (IBAction)pushShuffle:(id)sender {
-	[self drawCloudWithTags: [self shuffleAllTags]];
+	[self drawCloudWithTags:[self shuffleAllTags] toView:tagCloudView];
 }
 
 - (IBAction)pushRedraw:(id)sender {
-	[self drawCloudWithTags: self.tags];
+	[self drawCloudWithTags:self.tags toView:tagCloudView];
 }
 
 - (IBAction)pushAddGroup:(id)sender {
@@ -66,56 +74,15 @@
 	}
 }
 
-- (IBAction)pushSlider:(id)sender {
-	NSInteger selection = [tagTree selectedRow];
-	if (selection>=0) {
-		id item = [tagTree itemAtRow:selection];
-		if ([item class]==[Tag class]) {
-			Tag *tag = item;
-			tag.ratio = [NSNumber numberWithInteger: [sizeSlider integerValue]];
-		} else {
-			for (Tag *tag in [item tags]) {
-				tag.ratio = [NSNumber numberWithInteger: [sizeSlider integerValue]];
-			}
-		}
-		[self drawCloudWithTags:self.tags];
-	}
-	[sizeTextField setIntegerValue:[sizeSlider integerValue]];
-}
-
-
 - (IBAction)pushFont:(id)sender {
- /* 
-    NSInteger selection = [tagTree selectedRow];
-	id item = [tagTree itemAtRow:selection];
-	TagGroup *group;
-	if ([item class]==[Tag class]) {
-		group = [item group];
-	} else {
-		group = item;
-	}
-	self.selectedItemForEdit = group;
-*/
-	[fontManager setSelectedFont:selectedItemForEdit.font isMultiple:NO];
+	[self updateFontPanel];
     [fontManager orderFrontFontPanel:self];
 }
 
 - (void)pushColor:(id)sender {
 	NSColorPanel *panel = [NSColorPanel sharedColorPanel];
 
-/*
-    NSInteger selection = [tagTree selectedRow];
-	id item = [tagTree itemAtRow:selection];
-	TagGroup *group;
-	if ([item class]==[Tag class]) {
-		group = [item group];
-	} else {
-		group = item;
-	}
-	self.selectedItemForEdit = group;
-*/
 	[panel setColor:selectedItemForEdit.color];
-
 	[panel setDelegate:self];
 	[panel setTarget:self];
 	[panel setAction:@selector(changeColor:)];
@@ -139,18 +106,6 @@
 }
 
 #pragma mark -
-#pragma mark Notifications
-
-- (void)managedObjectsDidChangeNotification:(NSNotification*)notification {
-	NSDictionary *userInfo = [notification userInfo];
-	if (([[userInfo objectForKey:NSInsertedObjectsKey] count]>0) ||
-		([[userInfo objectForKey:NSDeletedObjectsKey] count]>0)) {
-		self.tagGroups = nil;
-	}
-	[tagTree reloadData];
-	[self drawCloudWithTags:self.tags];
-}
-
 #pragma mark Manage Objects
 - (TagGroup*)addTagGroup {
 	NSManagedObjectModel *managedObjectModel = [self managedObjectModel];
@@ -174,24 +129,23 @@
 	NSUInteger i = 0;
 	for (Tag *tag in shuffledArray) {
 		tag.sortIndex = [NSNumber numberWithUnsignedInteger:i++];
+        NSLog(@"%@ %lu", tag.text, i);
 	}
 	return shuffledArray;
 }
 
-- (void)drawCloudWithTags:(NSArray*)tags {
-	[tagCloudView clearCloud];
+-(void)drawCloudWithTags:(NSArray *)tags toView:(TagCloudView*)view {
+    [view clearCloud];
 	for (Tag *dataSet in tags) {
 		NSString *text = dataSet.text;
-		CGRect textFrame = [tagCloudView calculatePositionForString:text withFont:dataSet.font];
-
-        [tagCloudView createLabelWithText:text
-									 font:dataSet.font
-									color:dataSet.color
-									frame:textFrame];
+		CGRect textFrame = [view calculatePositionForString:text withFont:dataSet.font];
+        
+        [view createLabelWithText:text
+                             font:dataSet.font
+                            color:dataSet.color
+                            frame:textFrame];
     }
-         
 }
-
 
 // Lightweight Versioning of Models
 - (BOOL)configurePersistentStoreCoordinatorForURL:(NSURL *)url
@@ -215,93 +169,16 @@
 													  error:error];
 }
 
+#pragma mark Notifications
 
-#pragma mark Outline View Data Source
-
-- (id) outlineView:(NSOutlineView *)outlineView child:(NSInteger)index ofItem:(id)item {
-	id result = nil;
-	
-	if (item==nil) {
-		result = [self.tagGroups objectAtIndex:index];
-	} else if ([item class]==[TagGroup class]) {
-		result = [[[(TagGroup*)item tags] allObjects] objectAtIndex:index];
+- (void)managedObjectsDidChangeNotification:(NSNotification*)notification {
+	NSDictionary *userInfo = [notification userInfo];
+	if (([[userInfo objectForKey:NSInsertedObjectsKey] count]>0) ||
+		([[userInfo objectForKey:NSDeletedObjectsKey] count]>0)) {
+		self.tagGroups = nil;
 	}
-	return result;
-}
-- (id) outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item {
-	id result = nil;
-	if (item==nil) {
-		result = @"/";
-	} else {
-        result = [item valueForKey:[tableColumn identifier]];
-    }
-	return result;
-}
-
-- (BOOL) outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item {
-    return ([item class] == [Tag class]) ? NO : YES;
-}
-
-- (NSInteger) outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item {
-	NSInteger result = 0;
-	if (item==nil) {
-		result = [self.tagGroups count];
-	} else if ([item class]==[TagGroup class]) {
-		result = [[(TagGroup*)item tags] count];
-	}
-	return result;
-}
-
-- (void) outlineView:(NSOutlineView *)outlineView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn byItem:(id)item {
-	
-    [item setValue:object forKey:[tableColumn identifier]];
-    
-}
-
-- (void) outlineViewSelectionDidChange:(NSNotification *)notification {
-	NSInteger selection = [tagTree selectedRow];
-	Tag *tag;
-	TagGroup *group;                        //+
-	if (selection>=0) {
-		id item = [tagTree itemAtRow:selection];
-		if ([item class]==[Tag class]) {
-			tag = item;
-			[sizeSlider setIntegerValue: [tag.ratio integerValue]];
-			[sizeTextField setIntegerValue:[tag.ratio integerValue]];
-            group = [item group];
-		} else {
-			NSInteger i = -1;
-			for (tag in [item tags]) {
-				if (i>=0 && [tag.ratio integerValue]!=i) {
-					i=-1;
-					break;
-				} else {
-					i = [tag.ratio integerValue];
-				}
-			}
-			if (i>=0) {
-				tag = [[(TagGroup*)item tags] anyObject];
-				[sizeSlider setIntegerValue: [tag.ratio integerValue]];
-				[sizeTextField setIntegerValue:[tag.ratio integerValue]];
-			} else {
-				[sizeTextField setStringValue:@"--"];
-			}
-            
-            group = item;                       //+
-		}
-        self.selectedItemForEdit = group;       //+        
-    }
-    
-/*
-	id item = [tagTree itemAtRow:selection]; //+
-	TagGroup *group;                        //+
-	if ([item class]==[Tag class]) {        //+
-		group = [item group];               //+
-	} else {                                //+
-		group = item;                       //+
-	}
-	self.selectedItemForEdit = group;       //+
- */
+	[tagTree reloadData];
+	[self drawCloudWithTags:self.tags toView:tagCloudView];
 }
 
 #pragma mark Manual Properties
@@ -327,22 +204,204 @@
 	tagGroups = array;
 	[array retain];
 }
+
 - (NSArray*)tags {
 	NSArray* tags = nil;
 	NSFetchRequest *request = [[NSFetchRequest alloc] init];
 	NSEntityDescription *entity = [[[self managedObjectModel] entitiesByName] objectForKey:TagEntityKey];
 	[request setEntity:entity];
-
+    
 	NSSortDescriptor *sortDescriptor1 = [NSSortDescriptor sortDescriptorWithKey:TagPropertySortIndexKey ascending:YES];
 	NSSortDescriptor *sortDescriptor2 = [NSSortDescriptor sortDescriptorWithKey:TagPropertyTextKey ascending:YES];
 	[request setSortDescriptors:[NSArray arrayWithObjects:sortDescriptor1, sortDescriptor2, nil]];
-
+    
 	NSError *error;
 	tags = [self.managedObjectContext executeFetchRequest:request error:&error];
 	[request release];
 	return tags;
 }
 
+#pragma mark -
+#pragma mark Outline View Data Source
+
+- (id) outlineView:(NSOutlineView *)outlineView child:(NSInteger)index ofItem:(id)item {
+	id result = nil;
+	
+	if (item==nil) {
+		result = [self.tagGroups objectAtIndex:index];
+	} else if ([item class]==[TagGroup class]) {
+		result = [[[(TagGroup*)item tags] allObjects] objectAtIndex:index];
+	}
+	return result;
+}
+- (id) outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item {
+    id result = nil;
+	if (item==nil) {
+		result = @"/";
+	} else {
+        result = [item valueForKey:[tableColumn identifier]];
+    }
+	return result;
+}
+
+- (BOOL) outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item {
+    return ([item class] == [Tag class]) ? NO : YES;
+}
+
+- (NSInteger) outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item {
+	NSInteger result = 0;
+	if (item==nil) {
+		result = [self.tagGroups count];
+	} else if ([item class]==[TagGroup class]) {
+		result = [[(TagGroup*)item tags] count];
+	}
+	return result;
+}
+
+- (void) outlineView:(NSOutlineView *)outlineView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn byItem:(id)item {
+    [item setValue:object forKey:[tableColumn identifier]];
+}
+
+- (void) outlineViewSelectionDidChange:(NSNotification *)notification {
+	NSInteger selection = [tagTree selectedRow];
+	TagGroup *group;                       
+	if (selection>=0) {
+		id item = [tagTree itemAtRow:selection];
+		if ([item class]==[Tag class]) {
+            group = [item group];
+		} else if ([item class]==[TagGroup class]) {		
+            group = item;                       
+		}
+        self.selectedItemForEdit = group;             
+        [self updateFontPanel];
+    }
+}
+
+#pragma mark -
+#pragma mark Drag and Drop
+
+- (BOOL)outlineView:(NSOutlineView *)outlineView 
+         writeItems:(NSArray *)items 
+       toPasteboard:(NSPasteboard *)pboard { 
+    draggedItems = items;
+   
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:items];
+    [pboard declareTypes:[NSArray arrayWithObject:TagTreeDatatype] owner:self];
+    [pboard setData:data forType:TagTreeDatatype];
+   
+    return YES;
+}
+
+-(NSDragOperation)outlineView:(NSOutlineView *)outlineView 
+                 validateDrop:(id<NSDraggingInfo>)info 
+                 proposedItem:(id)item 
+           proposedChildIndex:(NSInteger)index {
+    
+   
+    NSDragOperation result = NSDragOperationMove;
+//    NSDragOperation op = [info draggingSourceOperationMask];
+//    if (op == NSTableViewDropAbove) {result = NSDragOperationMove;} 
+//   NSLog(@"validateDrop - Drop result: %lu; Drop oper: %lu",result, op);
+    return result;
+}
+
+-(BOOL)outlineView:(NSOutlineView*)outlineView 
+        acceptDrop:(id<NSDraggingInfo>)info 
+              item:(id)item 
+        childIndex:(NSInteger)index {
+    
+    // item = TagGroup
+    // index = Stelle, an die gedroppt wurde
+    // draggedItems enthält die gedraggten Items
+  
+    for (Tag* tag in draggedItems) {
+        tag.group = item;
+    }
+    
+    /*         
+    NSPasteboard *pboard = [info draggingPasteboard];
+      
+    NSData *data = [pboard dataForType:TagTreeDatatype];
+    
+    NSIndexSet *rowIndexes = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+    NSLog(@"rowIndexes count: %lu", [rowIndexes count]);
+    */
+    
+    /* 
+     NSInteger aboveInsertIndexCount = 0;
+     NSInteger removeIndex = 0;
+     NSInteger dragRow = [rowIndexes lastIndex];
+     
+     while (dragRow != NSNotFound) {
+     if (dragRow >= index) {
+        removeIndex = dragRow + aboveInsertIndexCount;
+        aboveInsertIndexCount++;
+     } else {
+        removeIndex = dragRow;
+        index--;
+     }
+     
+         dragRow = [rowIndexes indexLessThanIndex:dragRow];
+     }
+     
+     item = [tagTree itemAtRow:removeIndex];
+     [item retain];
+     [[self managedObjectContext] deleteObject:item];
+     */
+     
+
+    return YES;
+}
+
+
+
+
+
+
+-(id)outlineView:(NSOutlineView *)outlineView persistentObjectForItem:(id)item {
+    return item;
+}
+
+
+
+
+/*
+-(BOOL)tableView:(NSTableView *)tableView 
+      acceptDrop:(id<NSDraggingInfo>)info 
+             row:(NSInteger)row 
+   dropOperation:(NSTableViewDropOperation)dropOperation {
+
+    NSPasteboard *pboard = [info draggingPasteboard];
+    NSData *data = [pboard dataForType:TagTreeDatatype];
+    NSIndexSet *rowIndexes = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+    
+    NSInteger aboveInsertIndexCount = 0;
+    NSInteger removeIndex = 0;
+    NSInteger dragRow = [rowIndexes lastIndex];
+    
+    while (dragRow != NSNotFound) {
+        if (dragRow >= row) {
+            removeIndex = dragRow + aboveInsertIndexCount;
+            aboveInsertIndexCount++;
+        } else {
+            removeIndex = dragRow;
+            row--;
+        }
+        dragRow = [rowIndexes indexLessThanIndex:dragRow];
+    }
+    
+    id item = [tagTree itemAtRow:removeIndex];
+    [item retain];
+    [[self managedObjectContext] deleteObject:item];
+
+    
+    
+    return YES;
+     }
+
+*/
+
+#pragma mark -
 #pragma mark Printing
 
 - (NSRect)coordinatesOfPrintArea {
@@ -362,34 +421,17 @@
 	return NSMakeRect(0, 0, coordinateRight-coordinateLeft+5.0f, coordinateTop-coordinateBottom+5.0f); // 5 = 1 für 0 als Koordinate und 2+2 für Rand links und Rechts um View
 }
 
--(TagCloudView *)createPrintView:(NSRect)rectToPrint {
-
-    TagCloudView *viewToPrint = [[[TagCloudView alloc] initWithFrame:rectToPrint] autorelease];
-	[viewToPrint clearCloud];
-	NSArray *tags = self.tags;
-	for (Tag *dataSet in tags) {
-		NSString *text = dataSet.text;
-		NSInteger size = [dataSet.ratio integerValue];
-		NSFont *font = [NSFont systemFontOfSize:size];
-		CGRect textFrame = [viewToPrint calculatePositionForString:text withFont:font];
-		[viewToPrint createLabelWithText:text
-									font:font
-								   color:dataSet.color
-								   frame:textFrame];
-	}
-    return viewToPrint;
-}
-
 - (BOOL)shouldChangePrintInfo:(NSPrintInfo *)newPrintInfo {
 	return YES;
 }
 
 - (NSPrintOperation *)printOperationWithSettings:(NSDictionary *)printSettings error:(NSError **)outError {
     NSRect rectToPrint = [self coordinatesOfPrintArea];
-    TagCloudView *viewToPrint = [self createPrintView:rectToPrint];
+    TagCloudView *viewToPrint = [[[TagCloudView alloc] initWithFrame:rectToPrint] autorelease];
+    [self drawCloudWithTags:self.tags toView:viewToPrint];
     
     NSPrintInfo *printInfo = [self printInfo];
-
+    
 	NSSize viewSize = [viewToPrint frame].size;
 	NSSize canvasSize = [printInfo paperSize];
 	canvasSize.width -= [printInfo leftMargin] + [printInfo rightMargin];
@@ -402,8 +444,10 @@
 	frame.size.height *= scaleFactor;
 	[viewToPrint setFrame:frame];
 	[viewToPrint.cloudView setFrame:frame];
-
-	return [NSPrintOperation printOperationWithView:viewToPrint printInfo:printInfo];
+ 
+    NSPrintOperation *printOperation = [NSPrintOperation printOperationWithView:viewToPrint printInfo:printInfo];
+    [printOperation setJobTitle:[self displayName]];
+    return printOperation;
 }
 
 #pragma mark -
@@ -420,9 +464,8 @@
 
 - (void)dealloc {
 	[tagGroups release];
-	[selectedItemForColorEdit release];
-    [selectedItemForFontEdit release];
     [selectedItemForEdit release];
+    [draggedItems release];
 	
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	
@@ -439,15 +482,13 @@
 	[super windowControllerDidLoadNib:aController];
     // Add any code here that needs to be executed once the windowController has loaded the document's window.
 	
+    //Drag'n'Drop
+    [tagTree registerForDraggedTypes:[NSArray arrayWithObject:TagTreeDatatype]];
     
-    // sharedFontManager holen denn zuerst muss dem ein Font genannt werden, damit er überhaupt was zurück gibt .... WEIRD!!!!!
+    // sharedFontManager holen denn zuerst muss dem ein Font uebergeben werden, damit er ueberhaupt was zurueck gibt .... WEIRD!!!!!
     fontManager = [NSFontManager sharedFontManager];
-    
-    [fontManager setAction:@selector(changeFont:)];     // ist eigentlich obsolet, da changeFont voreingestellt
     [fontManager setDelegate:self];
-    NSFont *font = [NSFont fontWithName:[[NSFont systemFontOfSize:15.0f] fontName] size:16.0f]; // hack
-    [fontManager setSelectedFont:font isMultiple:NO];
-  //  NSMenu *fontMenu = [fontManager fontMenu:YES];
+    [fontManager setSelectedFont:[NSFont systemFontOfSize:16.0f] isMultiple:NO];
     // -----
     
     NSInteger index = [tagTree columnWithIdentifier:OutlineViewColorColumnName];
@@ -459,7 +500,7 @@
 											 selector: @selector(managedObjectsDidChangeNotification:)
 												 name: NSManagedObjectContextObjectsDidChangeNotification
 											   object: [self managedObjectContext]];
-	[self drawCloudWithTags: self.tags];
+	[self drawCloudWithTags:self.tags toView:tagCloudView];
 }
 
 @end
