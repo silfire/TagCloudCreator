@@ -12,6 +12,7 @@
 
 #define TagPropertyTextKey @"text"
 #define TagPropertySortIndexKey @"sortIndex"
+#define TagPropertyViewSortIndexKey @"viewSortIndex"
 #define TagPropertyRatioKey @"ratio"
 #define TagPropertyGroupKey @"group"
 #define TagPropertyColorKey @"color"
@@ -23,9 +24,11 @@
 @property (nonatomic, retain) NSString * text;
 @property (nonatomic, retain) NSNumber * ratio;
 @property (nonatomic, retain) NSNumber * sortIndex;
+@property (nonatomic, retain) NSNumber * viewSortIndex;
 @property (nonatomic, retain) TagGroup * group;
 
 @property (readonly, nonatomic, retain) NSColor* color;
 @property (readonly, nonatomic, retain) NSFont *font;
+
 
 @end

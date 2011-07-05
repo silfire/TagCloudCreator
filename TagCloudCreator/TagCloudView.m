@@ -73,8 +73,8 @@
 
 - (CGRect)calculatePositionForString:(NSString*)text withFont:(NSFont*)font {
 	NSSize size = [text sizeWithAttributes:
-				   [NSDictionary dictionaryWithObjectsAndKeys:
-					font, NSFontAttributeName, nil]];
+                   [NSDictionary dictionaryWithObjectsAndKeys:font,NSFontAttributeName, nil]];
+    
 	size.width += 4;
 	CGRect superFrame = NSRectToCGRect([cloudView bounds]);
 	CGFloat centerX = superFrame.size.width / 2.0f;
@@ -135,8 +135,10 @@
 		tagCache = [[NSMutableArray alloc] init];
 		cloudView = [[[NSView alloc] initWithFrame:frame] autorelease];
 		[cloudView setAutoresizingMask: NSViewMinXMargin | NSViewMaxXMargin | NSViewMinYMargin | NSViewMaxYMargin];
+        
 		[self addSubview:cloudView];
     }
+    
     return self;
 }
 - (void)dealloc {

@@ -42,6 +42,23 @@
 
 - (IBAction)pushShuffle:(id)sender {
 	[self drawCloudWithTags:[self shuffleAllTags] toView:tagCloudView];
+    
+     NSArray *subTagCloudViews = [tagCloudView.cloudView subviews];
+    CGFloat coordinateLeft = MAXFLOAT;
+	CGFloat coordinateRight = 0.0f;
+	CGFloat coordinateBottom = MAXFLOAT;
+	CGFloat coordinateTop = 0.0f;
+	int a = 0;
+    
+    for (NSView *view in subTagCloudViews) {
+        NSLog(@"View: %i - l %f - r %f - t %f - b %f", a, view.frame.origin.x,view.frame.origin.x + view.frame.size.width,view.frame.origin.y + view.frame.size.height, view.frame.origin.y);
+        a++;
+		coordinateLeft = fmin(view.frame.origin.x, coordinateLeft);
+		coordinateRight = fmax(view.frame.origin.x + view.frame.size.width, coordinateRight);
+		coordinateBottom = fmin(view.frame.origin.y, coordinateBottom);
+		coordinateTop = fmax(view.frame.origin.y + view.frame.size.height, coordinateTop);
+	}
+    
 }
 
 - (IBAction)pushRedraw:(id)sender {
@@ -101,7 +118,7 @@
 
 #pragma mark ColorPanel Delegates
 
-- (void) changeColor:(id)sender {
+- (void)changeColor:(id)sender {
 	self.selectedItemForEdit.color = [sender color];
 }
 
@@ -120,7 +137,10 @@
 	NSEntityDescription *entity = [[managedObjectModel entitiesByName] objectForKey:TagEntityKey];
 	Tag *tag = [[[Tag alloc] initWithEntity:entity
 				 insertIntoManagedObjectContext:[self managedObjectContext]] autorelease];
-	tag.group = tagGroup;
+
+    tag.group = tagGroup;  
+    tag.viewSortIndex = [NSNumber numberWithUnsignedLong:[[tagGroup tags] count]];
+
 	return tag;
 }
 
@@ -230,7 +250,18 @@
 	if (item==nil) {
 		result = [self.tagGroups objectAtIndex:index];
 	} else if ([item class]==[TagGroup class]) {
-		result = [[[(TagGroup*)item tags] allObjects] objectAtIndex:index];
+		//result = [[[(TagGroup*)item tags] allObjects] objectAtIndex:index];
+        
+        NSArray *tags = [[(TagGroup*)item tags] allObjects];
+        for (Tag *tag in tags) {
+            NSInteger viewSortIndex = [tag.viewSortIndex integerValue];
+
+            if (index == viewSortIndex ) {
+                result = tag; 
+                break;
+            }
+        }
+        
 	}
 	return result;
 }
@@ -245,6 +276,7 @@
 }
 
 - (BOOL) outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item {
+    
     return ([item class] == [Tag class]) ? NO : YES;
 }
 
@@ -258,20 +290,24 @@
 	return result;
 }
 
-- (void) outlineView:(NSOutlineView *)outlineView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn byItem:(id)item {
+- (void) outlineView:(NSOutlineView *)outlineView 
+      setObjectValue:(id)object 
+      forTableColumn:(NSTableColumn *)tableColumn 
+              byItem:(id)item {
+    
     [item setValue:object forKey:[tableColumn identifier]];
 }
 
 - (void) outlineViewSelectionDidChange:(NSNotification *)notification {
-	NSInteger selection = [tagTree selectedRow];
+    NSInteger selection = [tagTree selectedRow];
 	TagGroup *group;                       
 	if (selection>=0) {
 		id item = [tagTree itemAtRow:selection];
 		if ([item class]==[Tag class]) {
             group = [item group];
 		} else if ([item class]==[TagGroup class]) {		
-            group = item;                       
-		}
+            group = item;          
+        }
         self.selectedItemForEdit = group;             
         [self updateFontPanel];
     }
@@ -310,11 +346,20 @@
               item:(id)item 
         childIndex:(NSInteger)index {
     
-    // item = TagGroup
+    // item = TagGroup, auf die gedroppt wurde
     // index = Stelle, an die gedroppt wurde
     // draggedItems enthält die gedraggten Items
   
-    for (Tag* tag in draggedItems) {
+    for (Tag *tag in draggedItems) {
+  /*      
+        NSUInteger tagCount= [[item tags] count];
+        if (index < tagCount) {
+            NSArray *result = [[[(TagGroup*)item tags] allObjects] objectAtIndex:index];
+            for (index; ; index++) {
+                <#statements#>
+            }
+        }
+   */
         tag.group = item;
     }
     
@@ -411,8 +456,10 @@
 	CGFloat coordinateRight = 0.0f;
 	CGFloat coordinateBottom = MAXFLOAT;
 	CGFloat coordinateTop = 0.0f;
-	
+	int a = 0;
 	for (NSView *view in subTagCloudViews) {
+        NSLog(@"View: %i - l %f - r %f - t %f - b %f", a, view.frame.origin.x,view.frame.origin.x + view.frame.size.width,view.frame.origin.y + view.frame.size.height, view.frame.origin.y);
+        a++;
 		coordinateLeft = fmin(view.frame.origin.x, coordinateLeft);
 		coordinateRight = fmax(view.frame.origin.x + view.frame.size.width, coordinateRight);
 		coordinateBottom = fmin(view.frame.origin.y, coordinateBottom);
@@ -428,6 +475,8 @@
 - (NSPrintOperation *)printOperationWithSettings:(NSDictionary *)printSettings error:(NSError **)outError {
     NSRect rectToPrint = [self coordinatesOfPrintArea];
     TagCloudView *viewToPrint = [[[TagCloudView alloc] initWithFrame:rectToPrint] autorelease];
+    
+    
     [self drawCloudWithTags:self.tags toView:viewToPrint];
     
     NSPrintInfo *printInfo = [self printInfo];
