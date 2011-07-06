@@ -53,6 +53,7 @@
     
     // Neue TagGroup in OutlineView anwählen
     [tagTree reloadData];
+    [tagTree reloadItem:nil reloadChildren:YES];
     NSInteger newTagGroupRow = [tagTree rowForItem:tagGroup];
     [tagTree selectRowIndexes:[NSIndexSet indexSetWithIndex:newTagGroupRow] byExtendingSelection:NO];
 }
