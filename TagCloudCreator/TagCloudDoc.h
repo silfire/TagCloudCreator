@@ -2,7 +2,7 @@
 //  TagCloudDoc.h
 //  TagCloudCreator
 //
-//  Created by Ingo Kasprzak on 11.05.11.
+//  Created by Peter Hauke on 11.05.11.
 //  Copyright 2011 Silutions. All rights reserved.
 //
 
