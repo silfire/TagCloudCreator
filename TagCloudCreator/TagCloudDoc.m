@@ -30,6 +30,7 @@
 @implementation TagCloudDoc
 @synthesize selectedItemForEdit; 
 @synthesize fontManager;
+@synthesize rotationAngle;
 
 #pragma mark -
 #pragma mark Private Methods
@@ -154,11 +155,18 @@
 	for (Tag *dataSet in tags) {
 		NSString *text = dataSet.text;
 		CGRect textFrame = [view calculatePositionForString:text withFont:dataSet.font];
-        
+        CGFloat rotation = [rotationAngle floatValue];
+        /*
         [view createLabelWithText:text
                              font:dataSet.font
                             color:dataSet.color
-                            frame:textFrame];
+                            frame:textFrame
+                         rotation:rotation];
+         */
+        [view newCreateLabelWithText:text
+                                font:dataSet.font 
+                               color:dataSet.color
+                            rotation:rotation];
     }
 }
 
@@ -194,6 +202,17 @@
 	}
 	[tagTree reloadData];
 	[self drawCloudWithTags:self.tags toView:tagCloudView];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath
+                      ofObject:(id)object
+                        change:(NSDictionary *)change
+                       context:(void *)context {
+
+    if ([keyPath isEqualToString:@"rotationAngle"]) {
+        [self drawCloudWithTags:self.tags toView:tagCloudView];
+    }
+
 }
 
 #pragma mark Manual Properties
@@ -453,13 +472,15 @@
 		// Add your subclass-specific initialization here.
 		// If an error occurs here, send a [self release] message and return nil.
     }
+    
     return self;
 }
 
 - (void)dealloc {
 	[tagGroups release];
     [selectedItemForEdit release];
-	
+	[rotationAngle release];
+    
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	
     [super dealloc];
@@ -493,6 +514,9 @@
 											 selector: @selector(managedObjectsDidChangeNotification:)
 												 name: NSManagedObjectContextObjectsDidChangeNotification
 											   object: [self managedObjectContext]];
+    
+    [self addObserver:self forKeyPath:@"rotationAngle" options:NSKeyValueObservingOptionNew context:NULL];
+    
 	[self drawCloudWithTags:self.tags toView:tagCloudView];
 }
 

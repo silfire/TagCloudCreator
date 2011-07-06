@@ -52,19 +52,22 @@
 - (void)createLabelWithText:(NSString*)text
 					   font:(NSFont*)font
 					  color:(NSColor*)color
-					  frame:(CGRect)frame {
+					  frame:(CGRect)frame 
+                   rotation:(CGFloat)rotation {
+    
 	NSTextField *textField = [[NSTextField alloc] initWithFrame:NSRectFromCGRect(frame)];
 
 	[textField setStringValue:text];
 	[textField setTextColor:color];
 	[textField setFont:font];
-
+    [textField setFrameRotation:rotation];
+    
 	[textField setBezeled:NO];
 	[textField setBordered:NO];
 	[textField setEditable:NO];
 	[textField setBackgroundColor:[NSColor clearColor]];
 	[textField setAutoresizingMask:0];
-
+    
 	[cloudView addSubview:textField];
 	[tagCache addObject:textField];
 
@@ -102,6 +105,71 @@
 		} while ([self hasCollision:textFrame]);
 	}
 	return textFrame;
+}
+
+- (void)newCreateLabelWithText:(NSString*)text
+                          font:(NSFont*)font
+                         color:(NSColor*)color
+                      rotation:(CGFloat)rotation {
+    NSTextField *textField = [[NSTextField alloc] init];
+    
+	[textField setStringValue:text];
+	[textField setTextColor:color];
+	[textField setFont:font];
+    
+
+    [textField sizeToFit];
+    
+    NSRect rect = [textField frame];
+    NSPoint newOrigin;
+    newOrigin.x = rect.size.width/2.0f;
+    newOrigin.y = rect.size.height/2.0f;
+    [textField setFrameOrigin:newOrigin];
+    
+    [textField setFrameRotation:rotation];
+    
+    CGRect superFrame = NSRectToCGRect([cloudView bounds]);
+	CGFloat centerX = superFrame.size.width / 2.0f;
+	CGFloat centerY = superFrame.size.height / 2.0f;
+    CGRect textFrame;
+    textFrame.origin.x = rect.origin.x;
+    textFrame.origin.y = rect.origin.y;
+    textFrame.size.width = rect.size.width;
+    textFrame.size.height = rect.size.height;
+    
+    if ([[cloudView subviews] count]==0) {
+		textFrame = CGRectMake(centerX-(textFrame.size.width / 2.0f), centerY-(textFrame.size.height / 2.0f), textFrame.size.width, textFrame.size.height);
+	} else {
+		CGFloat angle = 0.0f;
+		CGFloat distance = 0.0f;
+		
+		do {
+			angle += 5;
+			if (angle>=360) {
+				angle = rand();
+				angle = angle * 360.0f / RAND_MAX;
+				distance += 4.0f;
+			}
+			CGFloat xpos = sinf(2*pi*angle/360.0f) * distance;
+			//if (xpos>=0) { xpos+=size.width/2.0f; } else { xpos-=size.width/2.0f; }
+			CGFloat ypos = cosf(2*pi*angle/360.0f) * distance;
+			//if (ypos>=0) { ypos+=size.height/2.0f; } else { ypos-=size.height/2.0f; }
+			textFrame = CGRectMake(centerX-(textFrame.size.width / 2.0f)+xpos, centerY-(textFrame.size.height / 2.0f)+ypos, textFrame.size.width, textFrame.size.height);
+		} while ([self hasCollision:textFrame]);
+	}
+    
+    [textField setFrame:textFrame];
+    
+    [textField setBezeled:NO];
+	[textField setBordered:YES];
+	[textField setEditable:NO];
+	[textField setBackgroundColor:[NSColor clearColor]];
+	[textField setAutoresizingMask:0];
+    
+	[cloudView addSubview:textField];
+	[tagCache addObject:textField];
+    
+	[textField release];
 }
 
 
