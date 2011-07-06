@@ -11,6 +11,10 @@
 
 #import "MySpotlightImporter.h"
 
+Boolean GetMetadataForFile(void* thisInterface, 
+                           CFMutableDictionaryRef attributes, 
+                           CFStringRef contentTypeUTI,
+                           CFStringRef pathToFile);
 
 //==============================================================================
 //
