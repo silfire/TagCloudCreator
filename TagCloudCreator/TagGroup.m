@@ -23,6 +23,31 @@
     self.font = [NSFont systemFontOfSize:30.0f];
 }
 
+- (NSArray*)viewSortedTags {
+	/*
+	NSFetchRequest *request = [[NSFetchRequest alloc] init];
+
+	NSEntityDescription *entity = [NSEntityDescription entityForName:@"Tag"
+											  inManagedObjectContext:[self managedObjectContext]];
+
+	NSPredicate *predicate = [NSPredicate predicateWithFormat:@"group = %@", self];
+	NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:TagPropertyViewSortIndexKey ascending:YES];
+	
+	[request setEntity:entity];
+	[request setPredicate:predicate];
+	[request setSortDescriptors:[NSArray arrayWithObject:descriptor]];
+	
+	NSArray *result = [[self managedObjectContext] executeFetchRequest:request error:nil];
+	[request release]; */
+	
+	NSArray *result = [self.tags allObjects];
+	result = [result sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+		return [[obj1 viewSortIndex] compare:[obj2 viewSortIndex]];
+	}];
+	
+	return result;
+}
+
 #pragma mark Setter & Getter
 - (NSColor*)color {
 	return [NSKeyedUnarchiver unarchiveObjectWithData:self.colorData];
@@ -66,28 +91,6 @@
     [self willChangeValueForKey:@"tags" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
     [[self primitiveValueForKey:@"tags"] minusSet:value];
     [self didChangeValueForKey:@"tags" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
-}
-
-#pragma mark NSCoding
-- (id)initWithCoder:(NSCoder *)decoder {
-	if ((self = [super init])) {
-		self.fontData	= [decoder decodeObjectForKey:@"fontData"];
-		self.colorData	= [decoder decodeObjectForKey:@"colorData"];
-		self.text = [decoder decodeObjectForKey:@"text"];
-		self.tags = [decoder decodeObjectForKey:@"tags"];
-        self.color = [decoder decodeObjectForKey:@"color"];
-        self.font = [decoder decodeObjectForKey:@"font"];
-	}
-	return self;
-}
-
-- (void)encodeWithCoder:(NSCoder *)aCoder {
-	[aCoder encodeObject:self.fontData forKey:@"fontData"];
-    [aCoder encodeObject:self.colorData forKey:@"colorData"];
-    [aCoder encodeObject:self.text forKey:@"text"];
-    [aCoder encodeObject:self.tags forKey:@"tags"];
-    [aCoder encodeObject:self.color forKey:@"color"];
-    [aCoder encodeObject:self.font forKey:@"font"];	
 }
 
 @end

@@ -19,6 +19,7 @@
 #define OutlineViewColorColumnName @"color"
 #define OutlineViewTextColumnName @"text"
 
+#define TagGroupTreeDatatype @"de.silutions.TagCloudCreator.TagGroupTreeDatatype"
 #define TagTreeDatatype @"de.silutions.TagCloudCreator.TagTreeDatatype"
 
 @interface TagCloudDoc ()
@@ -29,7 +30,6 @@
 @implementation TagCloudDoc
 @synthesize selectedItemForEdit; 
 @synthesize fontManager;
-@synthesize draggedItems;
 
 #pragma mark -
 #pragma mark Private Methods
@@ -42,23 +42,6 @@
 
 - (IBAction)pushShuffle:(id)sender {
 	[self drawCloudWithTags:[self shuffleAllTags] toView:tagCloudView];
-    
-     NSArray *subTagCloudViews = [tagCloudView.cloudView subviews];
-    CGFloat coordinateLeft = MAXFLOAT;
-	CGFloat coordinateRight = 0.0f;
-	CGFloat coordinateBottom = MAXFLOAT;
-	CGFloat coordinateTop = 0.0f;
-	int a = 0;
-    
-    for (NSView *view in subTagCloudViews) {
-        NSLog(@"View: %i - l %f - r %f - t %f - b %f", a, view.frame.origin.x,view.frame.origin.x + view.frame.size.width,view.frame.origin.y + view.frame.size.height, view.frame.origin.y);
-        a++;
-		coordinateLeft = fmin(view.frame.origin.x, coordinateLeft);
-		coordinateRight = fmax(view.frame.origin.x + view.frame.size.width, coordinateRight);
-		coordinateBottom = fmin(view.frame.origin.y, coordinateBottom);
-		coordinateTop = fmax(view.frame.origin.y + view.frame.size.height, coordinateTop);
-	}
-    
 }
 
 - (IBAction)pushRedraw:(id)sender {
@@ -66,7 +49,12 @@
 }
 
 - (IBAction)pushAddGroup:(id)sender {
-	[self addTagGroup];
+	TagGroup *tagGroup = [self addTagGroup];
+    
+    // Neue TagGroup in OutlineView anwählen
+    [tagTree reloadData];
+    NSInteger newTagGroupRow = [tagTree rowForItem:tagGroup];
+    [tagTree selectRowIndexes:[NSIndexSet indexSetWithIndex:newTagGroupRow] byExtendingSelection:NO];
 }
 
 - (IBAction)pushAddItem:(id)sender {
@@ -79,8 +67,15 @@
 		} else {
 			group = item;
 		}
-		[self addTagToGroup:group];
+		Tag *tag = [self addTagToGroup:group];
+
+        // Neues Tag im OutlineView anwählen
+        [tagTree reloadData];
+        NSInteger newTagRow = [tagTree rowForItem:tag];
+        [tagTree selectRowIndexes:[NSIndexSet indexSetWithIndex:newTagRow] byExtendingSelection:NO];
 	}
+    
+    
 }
 
 - (IBAction)pushRemoveItem:(id)sender {
@@ -137,10 +132,8 @@
 	NSEntityDescription *entity = [[managedObjectModel entitiesByName] objectForKey:TagEntityKey];
 	Tag *tag = [[[Tag alloc] initWithEntity:entity
 				 insertIntoManagedObjectContext:[self managedObjectContext]] autorelease];
-
-    tag.group = tagGroup;  
-    tag.viewSortIndex = [NSNumber numberWithUnsignedLong:[[tagGroup tags] count]];
-
+	tag.group = tagGroup;
+	tag.viewSortIndex = [NSNumber numberWithUnsignedLong:[[tagGroup tags] count]];
 	return tag;
 }
 
@@ -251,17 +244,11 @@
 		result = [self.tagGroups objectAtIndex:index];
 	} else if ([item class]==[TagGroup class]) {
 		//result = [[[(TagGroup*)item tags] allObjects] objectAtIndex:index];
-        
-        NSArray *tags = [[(TagGroup*)item tags] allObjects];
-        for (Tag *tag in tags) {
-            NSInteger viewSortIndex = [tag.viewSortIndex integerValue];
-
-            if (index == viewSortIndex ) {
-                result = tag; 
-                break;
-            }
-        }
-        
+		
+		result = [[item viewSortedTags] objectAtIndex:index];
+		//NSArray *tags = [item viewSortedTags];
+		//result = [tags objectAtIndex:index];
+		NSLog(@"Item geliefert fuer Index %ld der Gruppe %@: Tag %@", index, [item text], [result text]);
 	}
 	return result;
 }
@@ -276,7 +263,6 @@
 }
 
 - (BOOL) outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item {
-    
     return ([item class] == [Tag class]) ? NO : YES;
 }
 
@@ -290,25 +276,26 @@
 	return result;
 }
 
-- (void) outlineView:(NSOutlineView *)outlineView 
-      setObjectValue:(id)object 
-      forTableColumn:(NSTableColumn *)tableColumn 
-              byItem:(id)item {
-    
+- (void) outlineView:(NSOutlineView *)outlineView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn byItem:(id)item {
     [item setValue:object forKey:[tableColumn identifier]];
+	/*
+	dispatch_async(dispatch_get_main_queue(), ^(void) {
+		[outlineView reloadData];
+	});
+	 */
 }
 
 - (void) outlineViewSelectionDidChange:(NSNotification *)notification {
-    NSInteger selection = [tagTree selectedRow];
-	TagGroup *group;                       
+	NSInteger selection = [tagTree selectedRow];
+	TagGroup *group = nil;                       
 	if (selection>=0) {
 		id item = [tagTree itemAtRow:selection];
 		if ([item class]==[Tag class]) {
             group = [item group];
 		} else if ([item class]==[TagGroup class]) {		
-            group = item;          
-        }
-        self.selectedItemForEdit = group;             
+            group = item;                       
+		}
+        self.selectedItemForEdit = group;     // für Änderung der Color        
         [self updateFontPanel];
     }
 }
@@ -319,26 +306,47 @@
 - (BOOL)outlineView:(NSOutlineView *)outlineView 
          writeItems:(NSArray *)items 
        toPasteboard:(NSPasteboard *)pboard { 
-    draggedItems = items;
-   
-    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:items];
-    [pboard declareTypes:[NSArray arrayWithObject:TagTreeDatatype] owner:self];
-    [pboard setData:data forType:TagTreeDatatype];
-   
-    return YES;
+    BOOL result = YES;
+	NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
+	
+    // TagGroup soll nicht dragbar sein
+    // 1. prüfen ob TagGroup gedragt 
+    int groupCounter = 0;
+	int tagCounter = 0;
+	for (id item in items) {
+		NSInteger index = [outlineView rowForItem:item];
+		if (index>=0) { [indexSet addIndex:index]; }
+		if ([item isKindOfClass:[TagGroup class]]) {
+			groupCounter++;
+		} else {
+			tagCounter++;
+		}
+	}
+    // 2. wenn (auch )TagGroup gedragt, dann returnwert = NO
+	if (tagCounter && groupCounter) result = NO;
+    
+    // Merken, ob Tag oder TagGroup gedragt wird
+	NSString *datatype = (tagCounter ? TagTreeDatatype : TagGroupTreeDatatype);
+	
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:indexSet];
+    [pboard declareTypes:[NSArray arrayWithObject:datatype] owner:self];
+    [pboard setData:data forType:datatype];
+    return result;
 }
 
 -(NSDragOperation)outlineView:(NSOutlineView *)outlineView 
                  validateDrop:(id<NSDraggingInfo>)info 
                  proposedItem:(id)item 
            proposedChildIndex:(NSInteger)index {
-    
-   
-    NSDragOperation result = NSDragOperationMove;
-//    NSDragOperation op = [info draggingSourceOperationMask];
-//    if (op == NSTableViewDropAbove) {result = NSDragOperationMove;} 
-//   NSLog(@"validateDrop - Drop result: %lu; Drop oper: %lu",result, op);
-    return result;
+	NSDragOperation result = NSDragOperationNone;
+	
+    // Drop zulassen, wenn Tag gedragt wurde
+    NSString *datatype = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:TagTreeDatatype]];
+	if (datatype) {
+		NSDragOperation op = [info draggingSourceOperationMask];
+		if (op & NSDragOperationEvery) {result = NSDragOperationMove;} 
+	}
+	return result;
 }
 
 -(BOOL)outlineView:(NSOutlineView*)outlineView 
@@ -349,101 +357,40 @@
     // item = TagGroup, auf die gedroppt wurde
     // index = Stelle, an die gedroppt wurde
     // draggedItems enthält die gedraggten Items
-  
-    for (Tag *tag in draggedItems) {
-  /*      
-        NSUInteger tagCount= [[item tags] count];
-        if (index < tagCount) {
-            NSArray *result = [[[(TagGroup*)item tags] allObjects] objectAtIndex:index];
-            for (index; ; index++) {
-                <#statements#>
-            }
-        }
-   */
-        tag.group = item;
-    }
     
-    /*         
     NSPasteboard *pboard = [info draggingPasteboard];
-      
     NSData *data = [pboard dataForType:TagTreeDatatype];
-    
     NSIndexSet *rowIndexes = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-    NSLog(@"rowIndexes count: %lu", [rowIndexes count]);
-    */
     
-    /* 
-     NSInteger aboveInsertIndexCount = 0;
-     NSInteger removeIndex = 0;
-     NSInteger dragRow = [rowIndexes lastIndex];
+	TagGroup *group = nil;
+	if ([item isKindOfClass:[TagGroup class]]) {
+		group = item;
+	} else {
+		group = [item group];
+	}
+	NSArray *tags = [group viewSortedTags];
+	
+	__block NSInteger newIndex = 0;
+	for (Tag *tag in tags) {
+		if (newIndex == index) {
+			[rowIndexes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
+				Tag *tagToInsert = [outlineView itemAtRow:idx];
+				tagToInsert.group = group;
+				tagToInsert.viewSortIndex = [NSNumber numberWithInteger:newIndex];
+				newIndex++;
+			}];
+		}
+		tag.viewSortIndex = [NSNumber numberWithInteger:newIndex];
+		newIndex++;
+	}
      
-     while (dragRow != NSNotFound) {
-     if (dragRow >= index) {
-        removeIndex = dragRow + aboveInsertIndexCount;
-        aboveInsertIndexCount++;
-     } else {
-        removeIndex = dragRow;
-        index--;
-     }
-     
-         dragRow = [rowIndexes indexLessThanIndex:dragRow];
-     }
-     
-     item = [tagTree itemAtRow:removeIndex];
-     [item retain];
-     [[self managedObjectContext] deleteObject:item];
-     */
-     
-
     return YES;
 }
 
-
-
-
-
-
+/*
 -(id)outlineView:(NSOutlineView *)outlineView persistentObjectForItem:(id)item {
     return item;
 }
-
-
-
-
-/*
--(BOOL)tableView:(NSTableView *)tableView 
-      acceptDrop:(id<NSDraggingInfo>)info 
-             row:(NSInteger)row 
-   dropOperation:(NSTableViewDropOperation)dropOperation {
-
-    NSPasteboard *pboard = [info draggingPasteboard];
-    NSData *data = [pboard dataForType:TagTreeDatatype];
-    NSIndexSet *rowIndexes = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-    
-    NSInteger aboveInsertIndexCount = 0;
-    NSInteger removeIndex = 0;
-    NSInteger dragRow = [rowIndexes lastIndex];
-    
-    while (dragRow != NSNotFound) {
-        if (dragRow >= row) {
-            removeIndex = dragRow + aboveInsertIndexCount;
-            aboveInsertIndexCount++;
-        } else {
-            removeIndex = dragRow;
-            row--;
-        }
-        dragRow = [rowIndexes indexLessThanIndex:dragRow];
-    }
-    
-    id item = [tagTree itemAtRow:removeIndex];
-    [item retain];
-    [[self managedObjectContext] deleteObject:item];
-
-    
-    
-    return YES;
-     }
-
 */
 
 #pragma mark -
@@ -456,10 +403,8 @@
 	CGFloat coordinateRight = 0.0f;
 	CGFloat coordinateBottom = MAXFLOAT;
 	CGFloat coordinateTop = 0.0f;
-	int a = 0;
+	
 	for (NSView *view in subTagCloudViews) {
-        NSLog(@"View: %i - l %f - r %f - t %f - b %f", a, view.frame.origin.x,view.frame.origin.x + view.frame.size.width,view.frame.origin.y + view.frame.size.height, view.frame.origin.y);
-        a++;
 		coordinateLeft = fmin(view.frame.origin.x, coordinateLeft);
 		coordinateRight = fmax(view.frame.origin.x + view.frame.size.width, coordinateRight);
 		coordinateBottom = fmin(view.frame.origin.y, coordinateBottom);
@@ -475,8 +420,6 @@
 - (NSPrintOperation *)printOperationWithSettings:(NSDictionary *)printSettings error:(NSError **)outError {
     NSRect rectToPrint = [self coordinatesOfPrintArea];
     TagCloudView *viewToPrint = [[[TagCloudView alloc] initWithFrame:rectToPrint] autorelease];
-    
-    
     [self drawCloudWithTags:self.tags toView:viewToPrint];
     
     NSPrintInfo *printInfo = [self printInfo];
@@ -514,7 +457,6 @@
 - (void)dealloc {
 	[tagGroups release];
     [selectedItemForEdit release];
-    [draggedItems release];
 	
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	

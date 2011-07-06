@@ -30,5 +30,4 @@
 @property (readonly, nonatomic, retain) NSColor* color;
 @property (readonly, nonatomic, retain) NSFont *font;
 
-
 @end

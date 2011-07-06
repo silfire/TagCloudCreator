@@ -23,4 +23,6 @@
 @property (nonatomic, retain) NSString * text;
 @property (nonatomic, retain) NSSet* tags;
 
+- (NSArray*)viewSortedTags;
+
 @end
