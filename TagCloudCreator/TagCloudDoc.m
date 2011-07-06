@@ -67,6 +67,7 @@
 			group = [item group];
 		} else {
 			group = item;
+            [tagTree expandItem:group];
 		}
 		Tag *tag = [self addTagToGroup:group];
 
