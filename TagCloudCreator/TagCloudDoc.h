@@ -17,10 +17,12 @@
     TagGroup *selectedItemForEdit;
 	NSArray *tagGroups;
     NSFontManager *fontManager;
+	NSTreeController *treeController;
 }
 @property (readonly, retain) NSArray *tagGroups;
 @property (readonly, retain) NSArray *tags;
 @property (assign) NSFontManager *fontManager;
+@property (assign) IBOutlet NSTreeController *treeController;
 
 - (TagGroup*)addTagGroup;
 - (Tag*)addTagToGroup:(TagGroup*)tagGroup;

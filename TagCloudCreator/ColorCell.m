@@ -9,7 +9,7 @@
 #import "ColorCell.h"
 
 @interface ColorCell ()
-@property (readwrite, nonatomic, retain) NSColorWell *colorWell;
+@property (readwrite, retain) NSColorWell *colorWell;
 @end
 
 @implementation ColorCell

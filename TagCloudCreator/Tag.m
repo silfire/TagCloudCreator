@@ -29,5 +29,8 @@
 	return self.group.font;
 }
 
+- (NSSet*)tags {
+	return [NSSet set];
+}
 
 @end

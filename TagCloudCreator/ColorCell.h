@@ -13,10 +13,10 @@
 	NSColor *color;
 	NSColorWell *colorWell;
 }
-@property (nonatomic, retain) NSColor *color;
-@property (readonly, nonatomic, retain) NSColorWell *colorWell;
-
+@property (retain) NSColor *color;
+@property (readonly, retain) NSColorWell *colorWell;
+/*
 - (void)setObjectValue:(id <NSCopying>)object;
 - (id)objectValue;
-
+*/
 @end

@@ -30,6 +30,7 @@
 @implementation TagCloudDoc
 @synthesize selectedItemForEdit; 
 @synthesize fontManager;
+@synthesize treeController;
 
 #pragma mark -
 #pragma mark Private Methods
@@ -61,18 +62,22 @@
 	NSInteger selection = [tagTree selectedRow];
 	TagGroup *group;
 	if (selection>=0) {
-		id item = [tagTree itemAtRow:selection];
+		NSTreeControllerTreeNode *item = [tagTree itemAtRow:selection];
 		if ([item class]==[Tag class]) {
 			group = [item group];
 		} else {
 			group = item;
 		}
-		Tag *tag = [self addTagToGroup:group];
+		NSInteger i = [tagTree rowForItem:group];
+
+		[treeController setSelectionIndexPaths:[NSIndexPath indexPathWithIndex:i]];
+		[treeController addChild:nil];
+//		Tag *tag = [self addTagToGroup:group];
 
         // Neues Tag im OutlineView anwählen
-        [tagTree reloadData];
-        NSInteger newTagRow = [tagTree rowForItem:tag];
-        [tagTree selectRowIndexes:[NSIndexSet indexSetWithIndex:newTagRow] byExtendingSelection:NO];
+//        [tagTree reloadData];
+//        NSInteger newTagRow = [tagTree rowForItem:tag];
+//        [tagTree selectRowIndexes:[NSIndexSet indexSetWithIndex:newTagRow] byExtendingSelection:NO];
 	}
     
     
@@ -236,7 +241,7 @@
 
 #pragma mark -
 #pragma mark Outline View Data Source
-
+/*
 - (id) outlineView:(NSOutlineView *)outlineView child:(NSInteger)index ofItem:(id)item {
 	id result = nil;
 	
@@ -278,12 +283,8 @@
 
 - (void) outlineView:(NSOutlineView *)outlineView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn byItem:(id)item {
     [item setValue:object forKey:[tableColumn identifier]];
-	/*
-	dispatch_async(dispatch_get_main_queue(), ^(void) {
-		[outlineView reloadData];
-	});
-	 */
 }
+*/
 
 - (void) outlineViewSelectionDidChange:(NSNotification *)notification {
 	NSInteger selection = [tagTree selectedRow];
