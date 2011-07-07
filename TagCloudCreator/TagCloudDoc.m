@@ -12,6 +12,7 @@
 #import "Tag.h"
 #import "ColorCell.h"
 #import "NSArray-Shuffle.h"
+#import "NSTreeController+IndexPathToObject.h"
 
 #define TagGroupEntityKey @"TagGroup"
 #define TagEntityKey @"Tag"
@@ -39,6 +40,14 @@
     [fontManager setSelectedFont:selectedItemForEdit.font isMultiple:NO];
 }
 
+- (void)updateViewSortIndexesInGroup:(TagGroup*)tagGroup {
+	NSTreeNode *treeNode = [self.treeController nodeForObject:tagGroup];
+	NSInteger sortIndex = 0;
+	for (NSTreeNode *node in [treeNode childNodes]) {
+		[[node representedObject] setViewSortIndex:[NSNumber numberWithInteger:sortIndex++]];
+	}
+}
+
 #pragma mark Actions
 
 - (IBAction)pushShuffle:(id)sender {
@@ -50,37 +59,48 @@
 }
 
 - (IBAction)pushAddGroup:(id)sender {
+	/*
 	TagGroup *tagGroup = [self addTagGroup];
     
     // Neue TagGroup in OutlineView anwählen
     [tagTree reloadData];
     NSInteger newTagGroupRow = [tagTree rowForItem:tagGroup];
     [tagTree selectRowIndexes:[NSIndexSet indexSetWithIndex:newTagGroupRow] byExtendingSelection:NO];
+	 */
 }
 
 - (IBAction)pushAddItem:(id)sender {
-	NSInteger selection = [tagTree selectedRow];
+	NSArray *selection = [self.treeController selectedObjects];
 	TagGroup *group;
-	if (selection>=0) {
-		NSTreeControllerTreeNode *item = [tagTree itemAtRow:selection];
+	if ([selection count]) {
+		id item = [selection objectAtIndex:0];
+
+		NSManagedObjectModel *managedObjectModel = [self managedObjectModel];
+		NSEntityDescription *entity = [[managedObjectModel entitiesByName] objectForKey:TagEntityKey];
+		Tag *tag = [[[Tag alloc] initWithEntity:entity insertIntoManagedObjectContext:[self managedObjectContext]] autorelease];
+
+		//tag.viewSortIndex = [NSNumber numberWithUnsignedLong:[[tagGroup tags] count]];
+
+		NSIndexPath *insertIndexPath;
+		
 		if ([item class]==[Tag class]) {
 			group = [item group];
+			tag.viewSortIndex = [item viewSortIndex];
+			// NSInteger idx = [[self.treeController selectionIndexPath] ];
+			insertIndexPath = [self.treeController selectionIndexPath];
 		} else {
 			group = item;
+			NSUInteger indexes[2];
+			insertIndexPath = [self.treeController indexPathToObject:group];
+			indexes[0] = [insertIndexPath indexAtPosition:0];
+			indexes[1] = 0;
+			insertIndexPath = [NSIndexPath indexPathWithIndexes:indexes length:2];
 		}
-		NSInteger i = [tagTree rowForItem:group];
-
-		[treeController setSelectionIndexPaths:[NSIndexPath indexPathWithIndex:i]];
-		[treeController addChild:nil];
-//		Tag *tag = [self addTagToGroup:group];
-
-        // Neues Tag im OutlineView anwählen
-//        [tagTree reloadData];
-//        NSInteger newTagRow = [tagTree rowForItem:tag];
-//        [tagTree selectRowIndexes:[NSIndexSet indexSetWithIndex:newTagRow] byExtendingSelection:NO];
+		
+		[self.treeController insertObject:tag atArrangedObjectIndexPath:insertIndexPath];
+		[self updateViewSortIndexesInGroup:group];
+		tag.group = group;
 	}
-    
-    
 }
 
 - (IBAction)pushRemoveItem:(id)sender {
@@ -308,30 +328,38 @@
          writeItems:(NSArray *)items 
        toPasteboard:(NSPasteboard *)pboard { 
     BOOL result = YES;
-	NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
 	
     // TagGroup soll nicht dragbar sein
     // 1. prüfen ob TagGroup gedragt 
-    int groupCounter = 0;
-	int tagCounter = 0;
+    NSMutableArray *groupIndexPaths = [NSMutableArray array];
+    NSMutableArray *tagIndexPaths = [NSMutableArray array];
 	for (id item in items) {
-		NSInteger index = [outlineView rowForItem:item];
-		if (index>=0) { [indexSet addIndex:index]; }
-		if ([item isKindOfClass:[TagGroup class]]) {
-			groupCounter++;
+		id representedObject = [item representedObject];
+		if ([representedObject isKindOfClass:[TagGroup class]]) {
+			[groupIndexPaths addObject:[self.treeController indexPathToObject:representedObject]];
 		} else {
-			tagCounter++;
+			[tagIndexPaths addObject:[self.treeController indexPathToObject:representedObject]];
 		}
 	}
-    // 2. wenn (auch )TagGroup gedragt, dann returnwert = NO
-	if (tagCounter && groupCounter) result = NO;
+    // 2. wenn (auch )TagGroup gedraggt, dann returnwert = NO
+	if ([tagIndexPaths count ] && [groupIndexPaths count]) result = NO;
     
-    // Merken, ob Tag oder TagGroup gedragt wird
-	NSString *datatype = (tagCounter ? TagTreeDatatype : TagGroupTreeDatatype);
+    // 3. Daten und Datentypen in das Pasteboard packen
+	NSMutableArray *types = [NSMutableArray arrayWithCapacity:2];
+	if ([tagIndexPaths count]) { [types addObject:TagTreeDatatype]; }
+	if ([groupIndexPaths count]) { [types addObject:TagGroupTreeDatatype]; }
+
+	[pboard declareTypes:types owner:self];
 	
-    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:indexSet];
-    [pboard declareTypes:[NSArray arrayWithObject:datatype] owner:self];
-    [pboard setData:data forType:datatype];
+	if ([tagIndexPaths count]) {
+		NSData *data = [NSKeyedArchiver archivedDataWithRootObject:tagIndexPaths];
+		[pboard setData:data forType:TagTreeDatatype];
+	}
+	if ([groupIndexPaths count]) {
+		NSData *data = [NSKeyedArchiver archivedDataWithRootObject:groupIndexPaths];
+		[pboard setData:data forType:TagGroupTreeDatatype];
+	}
+	
     return result;
 }
 
@@ -355,44 +383,16 @@
               item:(id)item 
         childIndex:(NSInteger)index {
     
-    // item = TagGroup, auf die gedroppt wurde
-    // index = Stelle, an die gedroppt wurde
-    // draggedItems enthält die gedraggten Items
-    
     NSPasteboard *pboard = [info draggingPasteboard];
     NSData *data = [pboard dataForType:TagTreeDatatype];
-    NSIndexSet *rowIndexes = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-    
-	TagGroup *group = nil;
-	if ([item isKindOfClass:[TagGroup class]]) {
-		group = item;
-	} else {
-		group = [item group];
-	}
-	NSArray *tags = [group viewSortedTags];
+    NSArray *indexPaths = [NSKeyedUnarchiver unarchiveObjectWithData:data];
 	
-	__block NSInteger newIndex = 0;
-	for (Tag *tag in tags) {
-		if (newIndex == index) {
-			[rowIndexes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
-				Tag *tagToInsert = [outlineView itemAtRow:idx];
-				tagToInsert.group = group;
-				tagToInsert.viewSortIndex = [NSNumber numberWithInteger:newIndex];
-				newIndex++;
-			}];
-		}
-		tag.viewSortIndex = [NSNumber numberWithInteger:newIndex];
-		newIndex++;
-	}
-     
+	// TODO: Reimplement dropping to work with NSTreeController
+	// To do this, create the objects to fill the following method parameters:
+	// [self.treeController moveNodes:<#(NSArray *)#> toIndexPath:<#(NSIndexPath *)#>];
+	
     return YES;
 }
-
-/*
--(id)outlineView:(NSOutlineView *)outlineView persistentObjectForItem:(id)item {
-    return item;
-}
-*/
 
 #pragma mark -
 #pragma mark Printing

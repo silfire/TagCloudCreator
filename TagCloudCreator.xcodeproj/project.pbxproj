@@ -35,6 +35,7 @@
 		1E8C6BD7137B2C1C00849D36 /* Tag.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E8C6BD6137B2C1C00849D36 /* Tag.m */; };
 		1E8C6BDD137B2C3900849D36 /* TagGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E8C6BDC137B2C3900849D36 /* TagGroup.m */; };
 		1E8C6BE6137B302B00849D36 /* ColorCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E8C6BE5137B302B00849D36 /* ColorCell.m */; };
+		1E99B7A413C5DD660087AFBA /* NSTreeController+IndexPathToObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E99B7A313C5DD660087AFBA /* NSTreeController+IndexPathToObject.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -100,6 +101,8 @@
 		1E8C6BDC137B2C3900849D36 /* TagGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagGroup.m; sourceTree = "<group>"; };
 		1E8C6BE4137B302B00849D36 /* ColorCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ColorCell.h; sourceTree = "<group>"; };
 		1E8C6BE5137B302B00849D36 /* ColorCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ColorCell.m; sourceTree = "<group>"; };
+		1E99B7A213C5DD660087AFBA /* NSTreeController+IndexPathToObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSTreeController+IndexPathToObject.h"; sourceTree = "<group>"; };
+		1E99B7A313C5DD660087AFBA /* NSTreeController+IndexPathToObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSTreeController+IndexPathToObject.m"; sourceTree = "<group>"; };
 		D02CFE461382A37800AC8061 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -267,6 +270,8 @@
 			children = (
 				1E02BDE1137B2648005E1B35 /* NSArray-Shuffle.h */,
 				1E02BDE2137B2648005E1B35 /* NSArray-Shuffle.m */,
+				1E99B7A213C5DD660087AFBA /* NSTreeController+IndexPathToObject.h */,
+				1E99B7A313C5DD660087AFBA /* NSTreeController+IndexPathToObject.m */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -435,6 +440,7 @@
 				1E8C6BD7137B2C1C00849D36 /* Tag.m in Sources */,
 				1E8C6BDD137B2C3900849D36 /* TagGroup.m in Sources */,
 				1E8C6BE6137B302B00849D36 /* ColorCell.m in Sources */,
+				1E99B7A413C5DD660087AFBA /* NSTreeController+IndexPathToObject.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
